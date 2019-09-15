@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/hotKeyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_padding_start_end"
+        android:text="@string/label_hot_key"
+        android:textSize="@dimen/common_text_size_label"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <com.donkingliang.labels.LabelsView
+        android:id="@+id/labelsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_padding_start_end"
+        android:layout_marginEnd="@dimen/common_padding_start_end"
+        app:labelTextColor="@color/common_text_color_detail"
+        app:labelTextSize="@dimen/common_text_size_label"
+        app:lineMargin="@dimen/padding_symmetric_vertical"
+        app:wordMargin="@dimen/padding_symmetric_horizontal" />
+
+</LinearLayout>

@@ -1,0 +1,131 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'AndResGuard'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+    buildToolsVersion = versions.buildToolsVersion
+
+    defaultConfig {
+        applicationId "wang.mycroft.lib.sample"
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        resConfigs "en", "zh"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //指定room.schemaLocation生成的文件路径
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental"   : "true"]
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../release.jks")
+            storePassword "release"
+            keyAlias "release.jks"
+            keyPassword "release"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            jniDebuggable true
+            renderscriptDebuggable true
+            debuggable true
+        }
+        release {
+            shrinkResources true
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            jniDebuggable true
+            signingConfig signingConfigs.release
+            renderscriptDebuggable true
+            debuggable true
+        }
+    }
+    compileOptions {
+        sourceCompatibility versions.jdk
+        targetCompatibility versions.jdk
+    }
+
+    configurations {
+        compile.exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+        all {
+            resolutionStrategy {
+                eachDependency { DependencyResolveDetails details ->
+                    if (details.requested.group == 'io.reactivex.rxjava3' &&
+                            details.requested.name == 'rxjava') {
+                        details.useVersion '3.0.0-RC1'
+                        details.because 'Unified the version of RxJava3'
+                    }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin_version}"
+
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
+    implementation project(path: ':lib')
+
+    implementation "androidx.navigation:navigation-fragment:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui:${versions.navigation}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+
+    implementation "androidx.room:room-runtime:${versions.room}"
+    implementation "androidx.room:room-ktx:${versions.room}"
+    implementation "androidx.room:room-rxjava2:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
+
+    // agent web
+    implementation 'com.just.agentweb:agentweb:4.0.3-beta@aar'
+
+    implementation 'com.github.donkingliang:LabelsView:1.5.0'
+
+    implementation 'com.hjq:titlebar:6.0'
+
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+
+    implementation 'com.blankj:swipe-panel:1.1'
+
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.0-alpha-1'
+}
+
+andResGuard {
+    mappingFile = null
+    use7zip = true
+    useSign = true
+    keepRoot = false
+    compressFilePattern = [
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+            "resources.arsc"
+    ]
+
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.10'
+    }
+}

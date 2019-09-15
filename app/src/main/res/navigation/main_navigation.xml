@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="wang.mycroft.lib.sample.ui.fragment.HomeFragment"
+        android:label="@string/main_page"
+        tools:layout="@layout/vertical_refresh_recycler" />
+
+    <fragment
+        android:id="@+id/navigation_category"
+        android:name="wang.mycroft.lib.sample.ui.fragment.CategoryFragment"
+        android:label="@string/tools"
+        tools:layout="@layout/fragment_category" />
+
+    <fragment
+        android:id="@+id/navigation_official"
+        android:name="wang.mycroft.lib.sample.ui.fragment.OfficialAccountFragment"
+        android:label="@string/official_account"
+        tools:layout="@layout/fragment_official_account" />
+
+    <fragment
+        android:id="@+id/navigation_tool"
+        android:name="wang.mycroft.lib.sample.ui.fragment.ToolsFragment"
+        android:label="@string/tool"
+        tools:layout="@layout/fragment_category" />
+
+
+    <fragment
+        android:id="@+id/navigation_project"
+        android:name="wang.mycroft.lib.sample.ui.fragment.ProjectFragment"
+        android:label="@string/project"
+        tools:layout="@layout/fragment_official_account" />
+
+</navigation>

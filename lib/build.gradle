@@ -1,0 +1,103 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+    buildToolsVersion = versions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 200
+        versionName "v2.0.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.jdk
+        targetCompatibility versions.jdk
+    }
+
+    // 强制 rxjava 3.0
+    configurations {
+        compile.exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+        all {
+            resolutionStrategy {
+                eachDependency { DependencyResolveDetails details ->
+                    if (details.requested.group == 'io.reactivex.rxjava3' &&
+                            details.requested.name == 'rxjava') {
+                        details.useVersion '3.0.0-RC1'
+                        details.because 'Unified the version of RxJava3'
+                    }
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
+
+    kapt "androidx.annotation:annotation:${versions.annotation}"
+
+    api "androidx.appcompat:appcompat:${versions.appcompat}"
+    api "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
+    api "com.google.android.material:material:${versions.material}"
+    api "androidx.recyclerview:recyclerview:${versions.recyclerview}"
+
+    api "androidx.lifecycle:lifecycle-common:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata-core:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-runtime:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-service:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
+
+    api "com.blankj:utilcodex:${versions.androidutilcodex}"
+
+    api "com.google.code.gson:gson:${versions.gson}"
+    api "com.squareup.okio:okio:${versions.okio}"
+    api "com.squareup.okhttp3:okhttp:${versions.okhttp}"
+    api "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}"
+
+    api "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    api "io.reactivex.rxjava3:rxjava:${versions.rxjava}"
+    api "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}"
+//    api 'io.reactivex.rxjava3:rxandroid:3.0.0-SNAPSHOT'
+    api "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
+
+    api "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+
+    api "com.github.bumptech.glide:glide:${versions.glide}"
+    kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+//    api 'com.github.bumptech.glide:okhttp3-integration:4.9.0'
+
+    api "com.github.CymChad:BaseRecyclerViewAdapterHelper:${versions.BRAV}"
+    api  "com.scwang.smart:refresh-layout-kernel:${versions.SmartRefreshLayout}"
+
+    api "com.github.tbruyelle:rxpermissions:${versions.rxpermissions}"
+
+    // immersion bar
+    api "com.gyf.immersionbar:immersionbar:${versions.immersionbar}"
+    api "com.gyf.immersionbar:immersionbar-ktx:${versions.immersionbar}"
+
+//    api 'com.github.cxyzy1:clearEditText:1.0.5'
+
+    // pretty time
+    api "org.ocpsoft.prettytime:prettytime:${versions.prettytime}"
+
+    api "me.dkzwm.widget.fet:core:${versions.fet}"
+}
