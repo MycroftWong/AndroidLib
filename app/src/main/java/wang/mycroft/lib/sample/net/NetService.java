@@ -122,6 +122,11 @@ public final class NetService {
         return handleResult(observable);
     }
 
+    public Observable<NetModel<List<HotKey>>> getHotKeyList2() {
+        Observable<NetModel<List<HotKey>>> observable = service.getHotKeyList();
+        return handleResult2(observable);
+    }
+
     public Observable<NetModel<ListData<Article>>> search(String key, int page) {
         Observable<NetModel<ListData<Article>>> observable = service.search(key, page);
         return handleResult2(observable);

@@ -6,20 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.blankj.utilcode.util.LogUtils
-import io.reactivex.disposables.Disposable
+import com.donkingliang.labels.LabelsView
 import kotlinx.android.synthetic.main.fragment_history_search.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.model.HistoryKey
+import wang.mycroft.lib.sample.model.HotKey
+import wang.mycroft.lib.sample.repository.HistorySearchRepository
+import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.service.HistoryKeyServiceImpl
 import wang.mycroft.lib.sample.service.IHistoryKeyService
 import wang.mycroft.lib.sample.shared.SearchViewModel
 import wang.mycroft.lib.sample.ui.adapter.recycler.HistorySearchAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
-import wang.mycroft.lib.util.DisposableUtil
 import java.util.*
 
 /**
@@ -41,17 +43,21 @@ class HistorySearchFragment : CommonFragment() {
 
     private var adapter: HistorySearchAdapter? = null
 
-    private var disposable: Disposable? = null
-
     private val clearClickListener = View.OnClickListener {
         historySearchKey.clear()
         adapter!!.notifyDataSetChanged()
         historyKeyService.clearHistoryKey()
     }
 
+    private lateinit var historySearchRepository: HistorySearchRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         searchViewModel = ViewModelProvider(activity!!).get(SearchViewModel::class.java)
+
+        historySearchRepository = ViewModelProvider(this)[HistorySearchRepository::class.java]
+        historySearchRepository.hotKeyList.observe(this, hotKeyObserver)
+        historySearchRepository.historySearchList.observe(this, historySearchListObserver)
     }
 
     override fun onCreateView(
@@ -61,6 +67,8 @@ class HistorySearchFragment : CommonFragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_history_search, container, false)
     }
+
+    private val hotKeyList = ArrayList<HotKey>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,23 +92,51 @@ class HistorySearchFragment : CommonFragment() {
             itemDecoration.setDrawable(ContextCompat.getDrawable(context!!, R.drawable.line)!!)
             addItemDecoration(itemDecoration)
         }
+
+        labelsView.run {
+            selectType = LabelsView.SelectType.NONE
+            setOnLabelClickListener { _, _, position ->
+                searchViewModel.setSearchKey(
+                    hotKeyList[position].name
+                )
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        disposable = historyKeyService
-            .allHistoryKey
-            .subscribe({ historyKeys ->
+
+        if (hotKeyList.isEmpty()) {
+            historySearchRepository.loadHotKeyList()
+        }
+
+        historySearchRepository.loadHistorySearchList()
+    }
+
+    private val hotKeyObserver: Observer<ResultModel<List<HotKey>>> by lazy {
+        Observer<ResultModel<List<HotKey>>> { resultModel ->
+            if (resultModel.data.isNullOrEmpty()) {
+                hotKeyContainer.visibility = View.GONE
+            } else {
+                hotKeyList.clear()
+                hotKeyList.addAll(resultModel.data)
+                hotKeyContainer.visibility = View.VISIBLE
+                labelsView.setLabels(hotKeyList) { _, _, data -> data.name }
+            }
+        }
+    }
+
+    private val historySearchListObserver: Observer<List<HistoryKey>> by lazy {
+        Observer<List<HistoryKey>> {
+            if (it.isNotEmpty()) {
                 historySearchKey.clear()
-                historySearchKey.addAll(historyKeys)
-                adapter!!.notifyDataSetChanged()
-            }, { LogUtils.e(it) },
-                { disposable = null })
+                historySearchKey.addAll(it)
+                adapter?.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onDestroyView() {
-        DisposableUtil.dispose(disposable)
-        disposable = null
         BaseQuickAdapterUtil.releaseAdapter(adapter)
         adapter = null
         super.onDestroyView()
