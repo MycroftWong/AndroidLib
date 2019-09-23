@@ -12,7 +12,7 @@
     </style>
 
     <!-- 通用的TextView样式 -->
-    <style name="CommonTextViewStyle" parent="Widget.AppCompat.TextView">
+    <style name="CommonTextViewStyle" parent="@style/Widget.AppCompat.TextView">
         <item name="android:textColor">@color/common_text_color</item>
         <item name="android:textSize">@dimen/common_text_size</item>
     </style>

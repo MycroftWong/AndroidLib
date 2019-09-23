@@ -83,10 +83,14 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin_version}"
 
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
+
     testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
     implementation project(path: ':lib')
+//    implementation 'com.github.MycroftWong:AndroidLib:v1.0.0'
 
     implementation "androidx.navigation:navigation-fragment:${versions.navigation}"
     implementation "androidx.navigation:navigation-ui:${versions.navigation}"
@@ -105,7 +109,7 @@ dependencies {
 
     implementation 'com.hjq:titlebar:6.0'
 
-    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     implementation 'com.blankj:swipe-panel:1.2'
 
