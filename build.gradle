@@ -23,19 +23,19 @@ buildscript {
                 'recyclerview': '1.1.0-beta04',
                 'lifecycle': '2.2.0-alpha05',
                 'room': '2.2.0-rc01',
-                'navigation': '2.2.0-alpha02',
+                'navigation': '2.2.0-alpha03',
 
                 'androidutilcodex': '1.25.9',
                 'gson': '2.8.5',
                 'okio': '2.4.0',
                 'okhttp': '4.2.0',
-                'retrofit': '2.6.1',
+                'retrofit': '2.6.2',
                 'rxjava': '3.0.0-RC1',
                 'rxandroid': '2.1.1',
-                'glide': '4.9.0',
+                'glide': '4.10.0',
 
                 'rxpermissions': '0.10.2',
-                'BRAV': '2.9.46',
+                'BRAV': '2.9.49-androidx',
                 'SmartRefreshLayout': '2.0.0-alpha-1',
                 'immersionbar': '3.0.0',
 
