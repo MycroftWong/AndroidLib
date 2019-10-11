@@ -5,7 +5,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.blankj.utilcode.util.StringUtils
 import wang.mycroft.lib.sample.R
-import wang.mycroft.lib.sample.ui.fragment.*
+import wang.mycroft.lib.sample.ui.fragment.HomeFragment
+import wang.mycroft.lib.sample.ui.fragment.OfficialAccountFragment
+import wang.mycroft.lib.sample.ui.fragment.ProjectFragment
+import wang.mycroft.lib.sample.ui.fragment.ToolFragment
 
 /**
  * 主页 pager adapter
@@ -17,29 +20,24 @@ class MainPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(
     fragmentManager,
     BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 ) {
+
+    private val tabArray: Array<String> = StringUtils.getStringArray(R.array.tab_main)
+
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> HomeFragment.newInstance()
-            1 -> CategoryFragment.newInstance()
+            1 -> ToolFragment.newInstance()
             2 -> OfficialAccountFragment.newInstance()
-            3 -> ToolsFragment.newInstance()
-            4 -> ProjectFragment.newInstance()
+            3 -> ProjectFragment.newInstance()
             else -> HomeFragment.newInstance()
         }
     }
 
     override fun getCount(): Int {
-        return 5
+        return tabArray.size
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return when (position) {
-            0 -> StringUtils.getString(R.string.main_page)
-            1 -> StringUtils.getString(R.string.tools)
-            2 -> StringUtils.getString(R.string.official_account)
-            3 -> StringUtils.getString(R.string.tool)
-            4 -> StringUtils.getString(R.string.project)
-            else -> StringUtils.getString(R.string.main_page)
-        }
+        return tabArray[position]
     }
 }

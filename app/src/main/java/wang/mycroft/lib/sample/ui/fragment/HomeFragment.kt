@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.hjq.bar.OnTitleBarListener
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.loader.ImageLoader
+import kotlinx.android.synthetic.main.fragment_home.titleBar
 import kotlinx.android.synthetic.main.vertical_refresh_recycler.*
 import wang.mycroft.lib.net.GlideApp
 import wang.mycroft.lib.sample.R
@@ -26,6 +28,7 @@ import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.repository.HomeRepository
 import wang.mycroft.lib.sample.repository.model.ResultModel
+import wang.mycroft.lib.sample.ui.activity.SearchActivity
 import wang.mycroft.lib.sample.ui.activity.WebViewActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
@@ -76,6 +79,7 @@ class HomeFragment : CommonFragment() {
 
         homeRepository.articleList.observe(this, articleListObserver)
         homeRepository.bannerList.observe(this, bannerListObserver)
+        homeRepository.topArticleList.observe(this, topArticleListObserver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,17 +100,27 @@ class HomeFragment : CommonFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.vertical_refresh_recycler, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
         holder = Loading.getDefault().wrap(view).withRetry {
             holder?.showLoading()
             loadData(START_PAGE)
         }
-
         return holder!!.wrapper
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        titleBar.setOnTitleBarListener(object : OnTitleBarListener {
+            override fun onLeftClick(v: View) {}
+
+            override fun onTitleClick(v: View) {}
+
+            override fun onRightClick(v: View) {
+                startActivity(SearchActivity.getIntent(context!!))
+            }
+        })
+
         adapter = ArticleListAdapter(articleTypeModels)
 
         adapter!!.onItemClickListener = onItemClickListener
@@ -145,6 +159,7 @@ class HomeFragment : CommonFragment() {
 
             if (page == START_PAGE) {
                 homeRepository.loadBannerList()
+                homeRepository.loadTopArticleList()
             }
             homeRepository.loadArticleList(page)
         }
@@ -227,8 +242,19 @@ class HomeFragment : CommonFragment() {
             if (adapter!!.headerLayoutCount == 0) {
                 createBanner()
             } else {
-                bannerLayout?.update(bannerList)
+                bannerLayout?.update(resultModel.data)
             }
+        }
+    }
+
+    private val topArticleListObserver = Observer<ResultModel<List<Article>>> { resultModel ->
+        if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
+            articleTypeModels.removeAll { it.article.type == 1 }
+
+            resultModel.data.map { ArticleTypeModel(it) }.reversed()
+                .forEach { articleTypeModels.add(0, it) }
+
+            adapter?.notifyDataSetChanged()
         }
     }
 
@@ -253,7 +279,6 @@ class HomeFragment : CommonFragment() {
                         .load(url?.imagePath)
                         .into(imageView)
                 }
-
             })
 
             setOnBannerListener {

@@ -59,7 +59,10 @@ class ArticleListAdapter(data: List<ArticleTypeModel>) :
         }
 
         val labelText = helper.getView<TextView>(R.id.labelText)
-        if (item.isFresh) {
+        if (item.type == 1) {
+            labelText.visibility = View.VISIBLE
+            labelText.text = StringUtils.getString(R.string.text_label_top)
+        } else if (item.isFresh) {
             labelText.visibility = View.VISIBLE
             labelText.text = StringUtils.getString(R.string.text_label_fresh)
         } else {

@@ -64,6 +64,26 @@ class HomeRepository : ViewModel() {
             })
     }
 
+    private val topArticleListNetLiveData = MutableLiveData<NetModel<List<Article>>>()
+
+    val topArticleList: LiveData<ResultModel<List<Article>>> =
+        Transformations.map(topArticleListNetLiveData) {
+            SimpleResultModel(it)
+        }
+
+    private var topArticleDisposable: Disposable? = null
+
+    fun loadTopArticleList() {
+        topArticleDisposable = NetService.getInstance().topArticleList.subscribe({
+            topArticleListNetLiveData.value = it
+        }, {
+            topArticleDisposable = null
+            topArticleListNetLiveData.value = NetModel.error(it)
+        }, {
+            topArticleDisposable = null
+        })
+    }
+
     override fun onCleared() {
         super.onCleared()
         DisposableUtil.dispose(disposable)

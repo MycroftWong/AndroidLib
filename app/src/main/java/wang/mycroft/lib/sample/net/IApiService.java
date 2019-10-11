@@ -58,6 +58,14 @@ public interface IApiService {
     Observable<NetModel<List<Banner>>> getHomeBannerList();
 
     /**
+     * 获取置顶文章
+     *
+     * @return observable
+     */
+    @GET("article/top/json")
+    Observable<NetModel<List<Article>>> getTopArticleList();
+
+    /**
      * 通用的获取文章列表的接口
      *
      * @param url url

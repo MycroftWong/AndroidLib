@@ -99,6 +99,11 @@ public final class NetService {
         return handleResult2(observable);
     }
 
+    public Observable<NetModel<List<Article>>> getTopArticleList() {
+        Observable<NetModel<List<Article>>> observable = service.getTopArticleList();
+        return handleResult2(observable);
+    }
+
     public Observable<NetModel<ListData<Article>>> getArticleList(String url, int page) {
         Observable<NetModel<ListData<Article>>> observable = service.getArticleList(String.format(Locale.US, url, page));
         return handleResult2(observable);
