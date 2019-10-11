@@ -39,7 +39,7 @@ class ToolsFragment : CommonFragment() {
         }
     }
 
-    private lateinit var holder: LoadingHolder
+    private var holder: LoadingHolder? = null
 
     private var adapter: ToolsAdapter? = null
 
@@ -53,10 +53,10 @@ class ToolsFragment : CommonFragment() {
         val view = inflater.inflate(R.layout.fragment_category, container, false)
 
         holder = Loading.getDefault().wrap(view).withRetry {
-            holder.showLoading()
+            holder!!.showLoading()
             loadData()
         }
-        return holder.wrapper
+        return holder!!.wrapper
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,9 +72,9 @@ class ToolsFragment : CommonFragment() {
             )
         }
         if (adapter!!.data.isEmpty()) {
-            holder.showLoading()
+            holder?.showLoading()
         } else {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
         }
     }
 
@@ -85,13 +85,13 @@ class ToolsFragment : CommonFragment() {
 
         disposable = NetService.getInstance().toolList
             .subscribe({ toolsList ->
-                holder.showLoadSuccess()
+                holder?.showLoadSuccess()
                 for (item in toolsList) {
                     adapter!!.addData(ToolsHeader(item))
                 }
             }, { throwable ->
                 disposable = null
-                holder.showLoadFailed()
+                holder?.showLoadFailed()
                 ToastUtils.showShort(throwable.message)
             }, { disposable = null })
     }

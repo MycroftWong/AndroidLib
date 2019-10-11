@@ -10,9 +10,7 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.bar.OnTitleBarListener
-import com.hjq.bar.TitleBar
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.DefaultWebClient
 import com.just.agentweb.WebChromeClient
@@ -20,7 +18,6 @@ import com.just.agentweb.WebViewClient
 import kotlinx.android.synthetic.main.activity_web_view.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
-import wang.mycroft.lib.sample.model.Article
 
 /**
  *
@@ -32,16 +29,17 @@ class WebViewActivity : CommonActivity() {
 
     companion object {
 
-        private const val EXTRA_ARTICLE = "article.extra"
+        private const val EXTRA_TITLE = "title.extra"
 
-        fun getIntent(context: Context, article: Article): Intent {
-            val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra(EXTRA_ARTICLE, article)
-            return intent
+        private const val EXTRA_URL = "url.extra"
+
+        fun getIntent(context: Context, title: String, url: String): Intent {
+            return Intent(context, WebViewActivity::class.java).apply {
+                putExtra(EXTRA_TITLE, title)
+                putExtra(EXTRA_URL, url)
+            }
         }
     }
-
-    private var article: Article? = null
 
     private var agentWeb: AgentWeb? = null
 
@@ -60,30 +58,33 @@ class WebViewActivity : CommonActivity() {
         return R.layout.activity_web_view
     }
 
+    private lateinit var title: String
+
+    private lateinit var url: String
+
     override fun initFields(savedInstanceState: Bundle?) {
-        article = if (savedInstanceState == null) {
-            intent.getParcelableExtra(EXTRA_ARTICLE)
+
+        if (savedInstanceState == null) {
+            title = intent.getStringExtra(EXTRA_TITLE)
+            url = intent.getStringExtra(EXTRA_URL)
         } else {
-            savedInstanceState.getParcelable(EXTRA_ARTICLE)
+            title = savedInstanceState.getString(EXTRA_TITLE)!!
+            url = savedInstanceState.getString(EXTRA_URL)!!
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(EXTRA_ARTICLE, article)
+        with(outState) {
+            putString(EXTRA_TITLE, title)
+            putString(EXTRA_URL, url)
+        }
     }
 
     override fun initViews() {
-        immersionBar {
-            fitsSystemWindows(true)
-            statusBarColor(R.color.colorPrimaryDark)
-            statusBarDarkFont(true)
-        }
 
-        val titleBar = findViewById<TitleBar>(R.id.titleBar)
-//        titleBar.title = Html.fromHtml(article!!.title, Html.FROM_HTML_MODE_COMPACT)
         titleBar.title = HtmlCompat.fromHtml(
-            article!!.title,
+            title,
             HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
         )
         titleBar.setOnTitleBarListener(object : OnTitleBarListener {
@@ -92,11 +93,9 @@ class WebViewActivity : CommonActivity() {
             }
 
             override fun onTitleClick(v: View) {
-
             }
 
             override fun onRightClick(v: View) {
-
             }
         })
 
@@ -122,7 +121,7 @@ class WebViewActivity : CommonActivity() {
             .interceptUnkownUrl()
             .createAgentWeb()
             .ready()
-            .go(article!!.link)
+            .go(url)
 
     }
 

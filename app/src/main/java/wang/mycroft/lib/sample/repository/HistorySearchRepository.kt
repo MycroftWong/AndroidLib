@@ -46,7 +46,7 @@ class HistorySearchRepository : ViewModel() {
             return
         }
 
-        hotKeyDisposable = NetService.getInstance().hotKeyList2
+        hotKeyDisposable = NetService.getInstance().hotKeyList
             .subscribe({ hotKeys ->
                 hotKeyListLiveData.value = hotKeys
             }, { throwable ->

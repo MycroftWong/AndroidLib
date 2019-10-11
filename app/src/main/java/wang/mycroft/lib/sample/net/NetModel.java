@@ -4,8 +4,20 @@ package wang.mycroft.lib.sample.net;
  * 统一的数据结构
  *
  * @param <T> 真实数据
+ * @author wangqiang
  */
 public final class NetModel<T> {
+
+    /**
+     * 根据throwable获取NetModel
+     *
+     * @param throwable throwable
+     * @param <R>       得到的数据类型
+     * @return NetModel
+     */
+    public static <R> NetModel<R> error(Throwable throwable) {
+        return new NetModel<>(-1, throwable.getMessage(), null);
+    }
 
     /**
      * data : {}

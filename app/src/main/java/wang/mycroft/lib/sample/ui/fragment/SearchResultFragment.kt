@@ -81,7 +81,13 @@ class SearchResultFragment : CommonFragment() {
         adapter = ArticleListAdapter(searchResultList)
 
         adapter!!.setOnItemClickListener { _, _, position ->
-            startActivity(WebViewActivity.getIntent(context!!, searchResultList[position].article))
+            startActivity(
+                WebViewActivity.getIntent(
+                    context!!,
+                    searchResultList[position].article.title,
+                    searchResultList[position].article.link
+                )
+            )
         }
 
         recyclerView.run {
@@ -119,8 +125,8 @@ class SearchResultFragment : CommonFragment() {
                 currentPage = requestingPage
 
                 if (requestingPage == START_PAGE) {
-                    recyclerView.scrollToPosition(0)
                     searchResultList.clear()
+                    recyclerView.smoothScrollToPosition(0)
                 }
 
                 listData.datas.forEach {

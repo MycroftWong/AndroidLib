@@ -89,8 +89,8 @@ dependencies {
     testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
-    implementation project(path: ':lib')
-//    implementation 'com.github.MycroftWong:AndroidLib:v1.0.1'
+//    implementation project(path: ':lib')
+    implementation 'com.github.MycroftWong:AndroidLib:v1.0.2'
 
     implementation "androidx.navigation:navigation-fragment:${versions.navigation}"
     implementation "androidx.navigation:navigation-ui:${versions.navigation}"
@@ -114,6 +114,8 @@ dependencies {
     implementation 'com.blankj:swipe-panel:1.2'
 
     implementation "com.scwang.smart:refresh-header-classics:${versions.SmartRefreshLayout}"
+
+    implementation 'com.youth.banner:banner:1.4.10'
 }
 
 andResGuard {

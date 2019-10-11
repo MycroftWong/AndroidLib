@@ -50,7 +50,8 @@ class ToolsAdapter(data: List<MultiItemEntity>?) :
                         .startActivity(
                             WebViewActivity.getIntent(
                                 helper.itemView.context,
-                                content.article
+                                content.article.title,
+                                content.article.link
                             )
                         )
                 }

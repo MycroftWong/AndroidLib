@@ -4,15 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gyf.immersionbar.ktx.immersionBar
+import androidx.viewpager.widget.ViewPager
 import com.hjq.bar.OnTitleBarListener
 import kotlinx.android.synthetic.main.activity_main.*
 import wang.mycroft.lib.net.GlideApp
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
+import wang.mycroft.lib.sample.ui.adapter.pager.MainPagerAdapter
 
 /**
  * 首页，使用了Navigation
@@ -38,16 +36,6 @@ class MainActivity : CommonActivity() {
 
     override fun initViews() {
 
-        immersionBar {
-            statusBarColor(R.color.colorPrimaryDark)
-            fitsSystemWindows(true)
-            statusBarDarkFont(true)
-        }
-
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        navView.setupWithNavController(navController)
-
         titleBar.setOnTitleBarListener(object : OnTitleBarListener {
             override fun onLeftClick(v: View) {}
 
@@ -57,6 +45,46 @@ class MainActivity : CommonActivity() {
                 startActivity(SearchActivity.getIntent(this@MainActivity))
             }
         })
+
+        viewPager.adapter = MainPagerAdapter(supportFragmentManager)
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+
+                navView.selectedItemId = when (position) {
+                    0 -> R.id.navigation_home
+                    1 -> R.id.navigation_category
+                    2 -> R.id.navigation_official
+                    3 -> R.id.navigation_tool
+                    4 -> R.id.navigation_project
+                    else -> R.id.navigation_home
+                }
+                titleBar.title = navView.menu.findItem(navView.selectedItemId).title
+            }
+        })
+
+        navView.setOnNavigationItemSelectedListener {
+            val position: Int = when (it.itemId) {
+                R.id.navigation_home -> 0
+                R.id.navigation_category -> 1
+                R.id.navigation_official -> 2
+                R.id.navigation_tool -> 3
+                R.id.navigation_project -> 4
+                else -> 0
+            }
+            viewPager.setCurrentItem(position, false)
+
+            return@setOnNavigationItemSelectedListener true
+        }
     }
 
     override fun loadData() {

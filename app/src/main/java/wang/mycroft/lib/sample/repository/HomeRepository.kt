@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.Disposable
 import wang.mycroft.lib.sample.model.Article
+import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.net.NetModel
 import wang.mycroft.lib.sample.net.NetService
@@ -25,10 +26,10 @@ class HomeRepository : ViewModel() {
 
     val articleList: LiveData<ResultModel<ListData<Article>>> =
         Transformations.map(articleListNetLiveData) {
-            return@map SimpleResultModel<ListData<Article>>(
-                it
-            )
+            return@map SimpleResultModel<ListData<Article>>(it)
         }
+
+    private var disposable: Disposable? = null
 
     fun loadArticleList(page: Int) {
         disposable = NetService.getInstance().getHomeArticleList(page)
@@ -36,14 +37,32 @@ class HomeRepository : ViewModel() {
                 articleListNetLiveData.value = it
             }, { throwable ->
                 disposable = null
-                articleListNetLiveData.value =
-                    NetModel<ListData<Article>>(-1, throwable.message!!, null)
+                articleListNetLiveData.value = NetModel.error(throwable)
             }, {
                 disposable = null
             })
     }
 
-    private var disposable: Disposable? = null
+    private val bannerListNetLiveData = MutableLiveData<NetModel<List<Banner>>>()
+
+    private var bannerDisposable: Disposable? = null
+
+    val bannerList: LiveData<ResultModel<List<Banner>>> =
+        Transformations.map(bannerListNetLiveData) {
+            return@map SimpleResultModel(it)
+        }
+
+    fun loadBannerList() {
+        bannerDisposable = NetService.getInstance().homeBannerList
+            .subscribe({
+                bannerListNetLiveData.value = it
+            }, { throwable ->
+                bannerDisposable = null
+                bannerListNetLiveData.value = NetModel.error(throwable)
+            }, {
+                bannerDisposable = null
+            })
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -51,5 +70,4 @@ class HomeRepository : ViewModel() {
         disposable = null
 
     }
-
 }

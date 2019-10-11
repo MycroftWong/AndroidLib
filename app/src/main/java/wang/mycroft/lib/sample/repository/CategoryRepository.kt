@@ -33,7 +33,7 @@ class  CategoryRepository : ViewModel() {
             return
         }
 
-        disposable = NetService.getInstance().categoryList2
+        disposable = NetService.getInstance().categoryList
             .subscribe({ categoryListNetModel ->
                 categoryListLiveData.value = categoryListNetModel
             }, { throwable ->

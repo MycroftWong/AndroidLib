@@ -8,6 +8,8 @@
     <color name="common_text_color_detail">#666666</color>
     <color name="common_text_color_info">#999999</color>
 
+    <color name="common_text_color_red">@android:color/holo_red_light</color>
+
     <color name="tab_item_color">@color/common_text_color_info</color>
     <color name="tab_item_color_active">@color/common_text_color</color>
     <color name="color_placeholder">#F5F5F5</color>

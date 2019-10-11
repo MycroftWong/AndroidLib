@@ -5,7 +5,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.activity.MainActivity">
 
     <com.hjq.bar.TitleBar
@@ -19,18 +18,15 @@
         app:rightIcon="@drawable/search"
         app:title="@string/main_page" />
 
-    <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/height_title_bar"
-        android:layout_marginBottom="@dimen/height_navigation"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/main_navigation" />
+        android:layout_marginBottom="@dimen/height_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/navView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_navigation"
         android:layout_gravity="bottom"
@@ -43,5 +39,4 @@
         app:itemTextAppearanceInactive="@style/MainBottomNavigationTextAppearanceInactive"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_main" />
-
 </FrameLayout>

@@ -51,7 +51,6 @@ class ArticleListFragment : CommonFragment() {
         }
     }
 
-
     private var articleUrl: String? = null
     private var startPage: Int = 0
 
@@ -145,7 +144,8 @@ class ArticleListFragment : CommonFragment() {
             startActivity(
                 WebViewActivity.getIntent(
                     context!!,
-                    articleTypeModels[position].article
+                    articleTypeModels[position].article.title,
+                    articleTypeModels[position].article.link
                 )
             )
         }

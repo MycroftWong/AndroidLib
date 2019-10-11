@@ -1,8 +1,11 @@
 package wang.mycroft.lib.sample.ui.adapter.recycler
 
 import android.text.TextUtils
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.text.HtmlCompat
+import com.blankj.utilcode.util.StringUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import wang.mycroft.lib.net.GlideApp
@@ -40,8 +43,28 @@ class ArticleListAdapter(data: List<ArticleTypeModel>) :
             HtmlCompat.fromHtml(item.title, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE)
         )
             .setText(R.id.chapterText, buildContent(item))
-            .setText(R.id.authorText, item.author)
-            .setText(R.id.dateText, item.niceDate)
+
+        val dateText = helper.getView<TextView>(R.id.dateText)
+        dateText.text = if (TextUtils.isEmpty(item.niceDate)) {
+            item.niceShareDate
+        } else {
+            item.niceDate
+        }
+
+        val authorText = helper.getView<TextView>(R.id.authorText)
+        authorText.text = if (TextUtils.isEmpty(item.author)) {
+            item.shareUser
+        } else {
+            item.author
+        }
+
+        val labelText = helper.getView<TextView>(R.id.labelText)
+        if (item.isFresh) {
+            labelText.visibility = View.VISIBLE
+            labelText.text = StringUtils.getString(R.string.text_label_fresh)
+        } else {
+            labelText.visibility = View.GONE
+        }
     }
 
     private val builder = StringBuilder()
@@ -53,7 +76,7 @@ class ArticleListAdapter(data: List<ArticleTypeModel>) :
         val hasChapter = !TextUtils.isEmpty(result.chapterName)
 
         return if (hasSuperChapter && hasChapter) {
-            builder.append(result.superChapterName).append("·").append(result.chapterName)
+            builder.append(result.superChapterName).append("\u3000").append(result.chapterName)
                 .toString()
         } else if (!hasSuperChapter && !hasChapter) {
             ""

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.tabs.TabLayout
-import com.gyf.immersionbar.ktx.immersionBar
 import kotlinx.android.synthetic.main.activity_category_detail.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
@@ -53,11 +52,6 @@ class CategoryDetailActivity : CommonActivity() {
     }
 
     override fun initViews() {
-        immersionBar {
-            fitsSystemWindows(true)
-            statusBarColor(R.color.colorPrimaryDark)
-            statusBarDarkFont(true)
-        }
 
         titleBar.run {
             this.title = category.name

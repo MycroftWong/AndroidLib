@@ -1,6 +1,8 @@
 package wang.mycroft.lib.sample.app
 
 import android.app.Application
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.Utils
 import wang.mycroft.lib.sample.ui.view.SpinLoadingAdapter
 import wang.mycroft.lib.view.Loading
 
@@ -15,5 +17,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Loading.initDefault(SpinLoadingAdapter())
+
+        Utils.init(this)
+        LogUtils.getConfig().isLogSwitch = true
     }
 }

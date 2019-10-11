@@ -1,8 +1,6 @@
 package wang.mycroft.lib.sample.net;
 
 
-import androidx.lifecycle.LiveData;
-
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -13,6 +11,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import wang.mycroft.lib.sample.model.Article;
+import wang.mycroft.lib.sample.model.Banner;
 import wang.mycroft.lib.sample.model.Category;
 import wang.mycroft.lib.sample.model.HotKey;
 import wang.mycroft.lib.sample.model.ListData;
@@ -51,6 +50,14 @@ public interface IApiService {
     Observable<NetModel<ListData<Article>>> getHomeArticleList(@Path("page") int page);
 
     /**
+     * 获取首页banner列表
+     *
+     * @return observable
+     */
+    @GET("banner/json")
+    Observable<NetModel<List<Banner>>> getHomeBannerList();
+
+    /**
      * 通用的获取文章列表的接口
      *
      * @param url url
@@ -58,9 +65,9 @@ public interface IApiService {
      */
     @GET
     Observable<NetModel<ListData<Article>>> getArticleList(@Url String url);
-/*
+    /*
 
-    *//**
+     *//**
      * 通用的获取文章列表的接口
      *
      * @param url url

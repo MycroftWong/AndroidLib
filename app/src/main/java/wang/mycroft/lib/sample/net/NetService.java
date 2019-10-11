@@ -25,6 +25,7 @@ import wang.mycroft.lib.net.cookiejar.cache.SetCookieCache;
 import wang.mycroft.lib.net.cookiejar.persistence.SharedPrefsCookiePersistor;
 import wang.mycroft.lib.sample.exception.NetDataException;
 import wang.mycroft.lib.sample.model.Article;
+import wang.mycroft.lib.sample.model.Banner;
 import wang.mycroft.lib.sample.model.Category;
 import wang.mycroft.lib.sample.model.HotKey;
 import wang.mycroft.lib.sample.model.ListData;
@@ -34,6 +35,12 @@ import wang.mycroft.lib.sample.model.Tools;
 import wang.mycroft.lib.sample.service.FileServiceImpl;
 import wang.mycroft.lib.sample.service.IFileService;
 
+/**
+ * net service
+ *
+ * @author Mycroft Wong
+ * @date 2019年10月10日
+ */
 public final class NetService {
 
     public static NetService getInstance() {
@@ -63,7 +70,7 @@ public final class NetService {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
-                .addNetworkInterceptor(CacheInterceptor.INSTANCE)
+//                .addNetworkInterceptor(CacheInterceptor.INSTANCE)
                 .addNetworkInterceptor(loggingInterceptor)
                 .build();
 
@@ -87,17 +94,17 @@ public final class NetService {
         return handleResult2(observable);
     }
 
+    public Observable<NetModel<List<Banner>>> getHomeBannerList() {
+        Observable<NetModel<List<Banner>>> observable = service.getHomeBannerList();
+        return handleResult2(observable);
+    }
+
     public Observable<NetModel<ListData<Article>>> getArticleList(String url, int page) {
         Observable<NetModel<ListData<Article>>> observable = service.getArticleList(String.format(Locale.US, url, page));
         return handleResult2(observable);
     }
 
-    public Observable<List<Category>> getCategoryList() {
-        Observable<NetModel<List<Category>>> observable = service.getCategoryList();
-        return handleResult(observable);
-    }
-
-    public Observable<NetModel<List<Category>>> getCategoryList2() {
+    public Observable<NetModel<List<Category>>> getCategoryList() {
         Observable<NetModel<List<Category>>> observable = service.getCategoryList();
         return handleResult2(observable);
     }
@@ -117,12 +124,7 @@ public final class NetService {
         return handleResult(observable);
     }
 
-    public Observable<List<HotKey>> getHotKeyList() {
-        Observable<NetModel<List<HotKey>>> observable = service.getHotKeyList();
-        return handleResult(observable);
-    }
-
-    public Observable<NetModel<List<HotKey>>> getHotKeyList2() {
+    public Observable<NetModel<List<HotKey>>> getHotKeyList() {
         Observable<NetModel<List<HotKey>>> observable = service.getHotKeyList();
         return handleResult2(observable);
     }

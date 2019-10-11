@@ -3,6 +3,8 @@ package wang.mycroft.lib.sample.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Article implements Parcelable {
@@ -58,6 +60,25 @@ public class Article implements Parcelable {
     private int visible;
     private int zan;
     private List<ArticleTag> tags;
+    /**
+     * audit : 1
+     * niceShareDate : 16小时前
+     * selfVisible : 0
+     * shareDate : 1570637323000
+     * shareUser : 鸿洋
+     * tags : []
+     */
+
+    @SerializedName("audit")
+    private int audit;
+    @SerializedName("niceShareDate")
+    private String niceShareDate;
+    @SerializedName("selfVisible")
+    private int selfVisible;
+    @SerializedName("shareDate")
+    private long shareDate;
+    @SerializedName("shareUser")
+    private String shareUser;
 
     public Article() {
     }
@@ -87,6 +108,11 @@ public class Article implements Parcelable {
         visible = in.readInt();
         zan = in.readInt();
         tags = in.createTypedArrayList(ArticleTag.CREATOR);
+        audit = in.readInt();
+        niceShareDate = in.readString();
+        selfVisible = in.readInt();
+        shareDate = in.readLong();
+        shareUser = in.readString();
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {
@@ -285,6 +311,46 @@ public class Article implements Parcelable {
         this.zan = zan;
     }
 
+    public int getAudit() {
+        return audit;
+    }
+
+    public void setAudit(int audit) {
+        this.audit = audit;
+    }
+
+    public String getNiceShareDate() {
+        return niceShareDate;
+    }
+
+    public void setNiceShareDate(String niceShareDate) {
+        this.niceShareDate = niceShareDate;
+    }
+
+    public int getSelfVisible() {
+        return selfVisible;
+    }
+
+    public void setSelfVisible(int selfVisible) {
+        this.selfVisible = selfVisible;
+    }
+
+    public long getShareDate() {
+        return shareDate;
+    }
+
+    public void setShareDate(long shareDate) {
+        this.shareDate = shareDate;
+    }
+
+    public String getShareUser() {
+        return shareUser;
+    }
+
+    public void setShareUser(String shareUser) {
+        this.shareUser = shareUser;
+    }
+
     public List<ArticleTag> getTags() {
         return tags;
     }
@@ -299,30 +365,35 @@ public class Article implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(apkLink);
-        parcel.writeString(author);
-        parcel.writeInt(chapterId);
-        parcel.writeString(chapterName);
-        parcel.writeByte((byte) (collect ? 1 : 0));
-        parcel.writeInt(courseId);
-        parcel.writeString(desc);
-        parcel.writeString(envelopePic);
-        parcel.writeByte((byte) (fresh ? 1 : 0));
-        parcel.writeInt(id);
-        parcel.writeString(link);
-        parcel.writeString(niceDate);
-        parcel.writeString(origin);
-        parcel.writeString(prefix);
-        parcel.writeString(projectLink);
-        parcel.writeLong(publishTime);
-        parcel.writeInt(superChapterId);
-        parcel.writeString(superChapterName);
-        parcel.writeString(title);
-        parcel.writeInt(type);
-        parcel.writeInt(userId);
-        parcel.writeInt(visible);
-        parcel.writeInt(zan);
-        parcel.writeTypedList(tags);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(apkLink);
+        dest.writeString(author);
+        dest.writeInt(chapterId);
+        dest.writeString(chapterName);
+        dest.writeByte((byte) (collect ? 1 : 0));
+        dest.writeInt(courseId);
+        dest.writeString(desc);
+        dest.writeString(envelopePic);
+        dest.writeByte((byte) (fresh ? 1 : 0));
+        dest.writeInt(id);
+        dest.writeString(link);
+        dest.writeString(niceDate);
+        dest.writeString(origin);
+        dest.writeString(prefix);
+        dest.writeString(projectLink);
+        dest.writeLong(publishTime);
+        dest.writeInt(superChapterId);
+        dest.writeString(superChapterName);
+        dest.writeString(title);
+        dest.writeInt(type);
+        dest.writeInt(userId);
+        dest.writeInt(visible);
+        dest.writeInt(zan);
+        dest.writeTypedList(tags);
+        dest.writeInt(audit);
+        dest.writeString(niceShareDate);
+        dest.writeInt(selfVisible);
+        dest.writeLong(shareDate);
+        dest.writeString(shareUser);
     }
 }

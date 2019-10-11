@@ -1,20 +1,28 @@
 package wang.mycroft.lib.sample.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.youth.banner.loader.ImageLoader
 import kotlinx.android.synthetic.main.vertical_refresh_recycler.*
+import wang.mycroft.lib.net.GlideApp
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.model.Article
 import wang.mycroft.lib.sample.model.ArticleTypeModel
+import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.repository.HomeRepository
 import wang.mycroft.lib.sample.repository.model.ResultModel
@@ -23,7 +31,6 @@ import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
-import java.util.*
 
 /**
  *
@@ -36,45 +43,46 @@ class HomeFragment : CommonFragment() {
     companion object {
         private const val STATE_NEXT_PAGE = "next_page.state"
 
+        private const val STATE_ARTICLE_LIST = "article_list.state"
+
+        private const val STATE_BANNER_LIST = "banner_list.state"
+
         private const val START_PAGE = 0
+
+        fun newInstance(): HomeFragment {
+            return HomeFragment()
+        }
     }
 
     private val homeRepository by lazy {
         ViewModelProvider(this).get(HomeRepository::class.java)
     }
 
-    private var nextPage = 1
+    private var nextPage = START_PAGE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        nextPage = savedInstanceState?.getInt(STATE_NEXT_PAGE) ?: START_PAGE
-
-        homeRepository.articleList.observe(
-            this,
-            Observer<ResultModel<ListData<Article>>> { listDataResultModel ->
-                if (listDataResultModel.errorCode != 0) {
-                    if (articleTypeModels.isEmpty()) {
-                        holder?.showLoadFailed()
-                    } else {
-                        ToastUtils.showShort(listDataResultModel.errorMsg)
-                    }
-                } else {
-                    holder?.showLoadSuccess()
-
-                    val listData = listDataResultModel.data
-
-                    if (listData.curPage == START_PAGE) {
-                        articleTypeModels.clear()
-                    }
-                    nextPage = listData.curPage + 1
-
-                    for (item in listData.datas) {
-                        articleTypeModels.add(ArticleTypeModel(item))
-                    }
-                    adapter?.notifyDataSetChanged()
+        savedInstanceState?.let {
+            nextPage = it.getInt(STATE_NEXT_PAGE)
+            it.getParcelableArrayList<ArticleTypeModel>(STATE_ARTICLE_LIST)
+                ?.let { articleTypeModelList ->
+                    articleTypeModels.addAll(articleTypeModelList)
                 }
-                finishRefresh()
-            })
+
+            it.getParcelableArrayList<Banner>(STATE_BANNER_LIST)?.let { bannerList ->
+                this.bannerList.addAll(bannerList)
+            }
+        }
+
+        homeRepository.articleList.observe(this, articleListObserver)
+        homeRepository.bannerList.observe(this, bannerListObserver)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_NEXT_PAGE, nextPage)
+        outState.putParcelableArrayList(STATE_ARTICLE_LIST, articleTypeModels)
+        outState.putParcelableArrayList(STATE_BANNER_LIST, bannerList)
     }
 
     private val articleTypeModels = ArrayList<ArticleTypeModel>()
@@ -101,23 +109,15 @@ class HomeFragment : CommonFragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = ArticleListAdapter(articleTypeModels)
 
-        adapter!!.setOnItemClickListener { _, _, position ->
-            startActivity(
-                WebViewActivity.getIntent(
-                    context!!,
-                    articleTypeModels[position].article
-                )
-            )
+        adapter!!.onItemClickListener = onItemClickListener
+
+        with(recyclerView) {
+            addItemDecoration(DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL))
+            this.adapter = this@HomeFragment.adapter
         }
 
-        recyclerView.run {
-            addItemDecoration(
-                DividerItemDecoration(
-                    context!!,
-                    DividerItemDecoration.VERTICAL
-                )
-            )
-            this.adapter = this@HomeFragment.adapter
+        if (bannerList.isNotEmpty()) {
+            createBanner()
         }
 
         refreshLayout.setOnRefreshLoadMoreListener(refreshLoadMoreListener)
@@ -142,6 +142,10 @@ class HomeFragment : CommonFragment() {
         if (!isLoading) {
             holder?.showLoading()
             isLoading = true
+
+            if (page == START_PAGE) {
+                homeRepository.loadBannerList()
+            }
             homeRepository.loadArticleList(page)
         }
     }
@@ -160,6 +164,8 @@ class HomeFragment : CommonFragment() {
     }
 
     override fun onDestroyView() {
+        bannerLayout = null
+
         BaseQuickAdapterUtil.releaseAdapter(adapter)
         adapter = null
 
@@ -175,4 +181,88 @@ class HomeFragment : CommonFragment() {
             loadData(START_PAGE)
         }
     }
+
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
+        startActivity(
+            WebViewActivity.getIntent(
+                context!!,
+                articleTypeModels[position].article.title,
+                articleTypeModels[position].article.link
+            )
+        )
+    }
+
+    private val articleListObserver =
+        Observer<ResultModel<ListData<Article>>> { listDataResultModel ->
+            if (listDataResultModel.errorCode != ResultModel.CODE_SUCCESS) {
+                if (articleTypeModels.isEmpty()) {
+                    holder?.showLoadFailed()
+                } else {
+                    ToastUtils.showShort(listDataResultModel.errorMsg)
+                }
+            } else {
+                holder?.showLoadSuccess()
+
+                val listData = listDataResultModel.data
+
+                if (listData.curPage == START_PAGE) {
+                    articleTypeModels.clear()
+                }
+                nextPage = listData.curPage + 1
+
+                for (item in listData.datas) {
+                    articleTypeModels.add(ArticleTypeModel(item))
+                }
+                adapter?.notifyDataSetChanged()
+            }
+            finishRefresh()
+        }
+
+    private val bannerList = ArrayList<Banner>()
+
+    private val bannerListObserver = Observer<ResultModel<List<Banner>>> { resultModel ->
+        if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
+            bannerList.clear()
+            bannerList.addAll(resultModel.data)
+            if (adapter!!.headerLayoutCount == 0) {
+                createBanner()
+            } else {
+                bannerLayout?.update(bannerList)
+            }
+        }
+    }
+
+    private var bannerLayout: com.youth.banner.Banner? = null
+
+    private fun createBanner() {
+        val view = layoutInflater.inflate(R.layout.layout_home_banner, recyclerView, false)
+        bannerLayout = view.findViewById(R.id.bannerLayout)
+
+        with(bannerLayout!!) {
+            val screenWidth = ScreenUtils.getScreenWidth()
+            layoutParams = RecyclerView.LayoutParams(
+                RecyclerView.LayoutParams.MATCH_PARENT,
+                screenWidth * 9 / 16
+            )
+            setImages(bannerList)
+            isAutoPlay(true)
+            setImageLoader(object : ImageLoader() {
+                override fun displayImage(context: Context?, path: Any?, imageView: ImageView) {
+                    val url = path as Banner?
+                    GlideApp.with(imageView)
+                        .load(url?.imagePath)
+                        .into(imageView)
+                }
+
+            })
+
+            setOnBannerListener {
+            }
+
+            start()
+        }
+
+        adapter?.setHeaderView(view)
+    }
+
 }

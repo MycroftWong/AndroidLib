@@ -12,4 +12,5 @@
     <string name="main_page">主页</string>
     <string name="history_search">历史搜索</string>
     <string name="search_result">搜索结果</string>
+    <string name="text_label_fresh">新</string>
 </resources>
