@@ -27,9 +27,7 @@ class ArticleListRepository : ViewModel() {
 
     val articleList: LiveData<ResultModel<ListData<Article>>> =
         Transformations.map(articleListData) {
-            return@map SimpleResultModel<ListData<Article>>(
-                it
-            )
+            return@map SimpleResultModel<ListData<Article>>(it)
         }
 
     private var disposable: Disposable? = null
@@ -40,12 +38,11 @@ class ArticleListRepository : ViewModel() {
                 articleListData.value = it
             }, { throwable ->
                 disposable = null
-                articleListData.value = NetModel<ListData<Article>>(-1, throwable.message!!, null)
+                articleListData.value = NetModel.error(throwable)
             }, {
                 disposable = null
             })
     }
-
 
     override fun onCleared() {
         super.onCleared()

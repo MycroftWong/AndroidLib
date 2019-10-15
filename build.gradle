@@ -23,7 +23,7 @@ buildscript {
                 'recyclerview': '1.1.0-beta05',
                 'lifecycle': '2.2.0-beta01',
                 'room': '2.2.0',
-                'navigation': '2.2.0-alpha03',
+                'navigation': '2.2.0-beta01',
 
                 'androidutilcodex': '1.25.9',
                 'gson': '2.8.6',

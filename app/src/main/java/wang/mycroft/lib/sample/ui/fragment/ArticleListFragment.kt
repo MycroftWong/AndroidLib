@@ -76,31 +76,7 @@ class ArticleListFragment : CommonFragment() {
 
         articleListRepository = ViewModelProvider(this).get(ArticleListRepository::class.java)
         articleListRepository!!.articleUrl = articleUrl
-        articleListRepository!!.articleList.observe(
-            this,
-            Observer<ResultModel<ListData<Article>>> { listDataResultModel ->
-                if (listDataResultModel.errorCode != 0) {
-                    if (articleTypeModels.isEmpty()) {
-                        holder.showLoadFailed()
-                    } else {
-                        ToastUtils.showShort(listDataResultModel.errorMsg)
-                    }
-                } else {
-                    holder.showLoadSuccess()
-
-                    val listData = listDataResultModel.data
-                    if (listData.curPage == startPage) {
-                        articleTypeModels.clear()
-                    }
-                    nextPage = listData.curPage + 1
-
-                    for (item in listData.datas) {
-                        articleTypeModels.add(ArticleTypeModel(item))
-                    }
-                    adapter!!.notifyDataSetChanged()
-                }
-                finishRefresh()
-            })
+        articleListRepository!!.articleList.observe(this, observer)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -207,6 +183,31 @@ class ArticleListFragment : CommonFragment() {
         override fun onRefresh(refreshLayout: RefreshLayout) {
             loadData(startPage)
         }
+    }
+
+    private val observer = Observer<ResultModel<ListData<Article>>> { resultModel ->
+        if (resultModel.errorCode != 0) {
+            if (articleTypeModels.isEmpty()) {
+                holder.showLoadFailed()
+            } else {
+                ToastUtils.showShort(resultModel.errorMsg)
+            }
+        } else {
+            holder.showLoadSuccess()
+
+            val listData = resultModel.data
+            if (listData.curPage == startPage) {
+                articleTypeModels.clear()
+            }
+            nextPage = listData.curPage + 1
+
+            for (item in listData.datas) {
+                articleTypeModels.add(ArticleTypeModel(item))
+            }
+            adapter!!.notifyDataSetChanged()
+        }
+        finishRefresh()
+
     }
 
 }

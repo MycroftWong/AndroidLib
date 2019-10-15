@@ -26,9 +26,9 @@ class CategoryDetailActivity : CommonActivity() {
         private const val EXTRA_CATEGORY = "category.extra"
 
         fun getIntent(context: Context, category: Category): Intent {
-            val intent = Intent(context, CategoryDetailActivity::class.java)
-            intent.putExtra(EXTRA_CATEGORY, category)
-            return intent
+            return Intent(context, CategoryDetailActivity::class.java).apply {
+                putExtra(EXTRA_CATEGORY, category)
+            }
         }
     }
 

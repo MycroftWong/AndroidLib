@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 103
-        versionName "v1.0.3"
+        versionCode 104
+        versionName "v1.0.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -64,9 +64,13 @@ dependencies {
     api "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle}"
     api "androidx.lifecycle:lifecycle-livedata:${versions.lifecycle}"
     api "androidx.lifecycle:lifecycle-livedata-core:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}"
+
     api "androidx.lifecycle:lifecycle-runtime:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
     api "androidx.lifecycle:lifecycle-service:${versions.lifecycle}"
     api "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
 
     api "com.blankj:utilcodex:${versions.androidutilcodex}"
 

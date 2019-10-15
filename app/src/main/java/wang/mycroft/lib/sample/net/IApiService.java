@@ -73,16 +73,19 @@ public interface IApiService {
      */
     @GET
     Observable<NetModel<ListData<Article>>> getArticleList(@Url String url);
-    /*
 
-     *//**
+/*
+    */
+/**
      * 通用的获取文章列表的接口
      *
      * @param url url
      * @return
      *//*
+
     @GET
-    LiveData<NetModel<ListData<Article>>> getArticleList2(@Url String url);*/
+    Observable<NetModel<ListData<Article>>> getArticleList2(@Url String url);
+*/
 
 
     /**

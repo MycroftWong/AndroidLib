@@ -4,7 +4,7 @@ import wang.mycroft.lib.sample.net.NetModel;
 
 /**
  * @blog: https://blog.mycroft.wang
- * @date: 2019年09月13
+ * @date: 2019年09月13日
  * @author: wangqiang
  */
 public class SimpleResultModel<T> implements ResultModel<T> {

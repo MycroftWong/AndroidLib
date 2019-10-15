@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -108,6 +109,11 @@ public final class NetService {
         Observable<NetModel<ListData<Article>>> observable = service.getArticleList(String.format(Locale.US, url, page));
         return handleResult2(observable);
     }
+
+    /*public Observable<NetModel<ListData<Article>>> getArticleList2(String url, int page) {
+        Observable<NetModel<ListData<Article>>> observable = service.getArticleList2(String.format(Locale.US, url, page));
+        return handleResult2(observable);
+    }*/
 
     public Observable<NetModel<List<Category>>> getCategoryList() {
         Observable<NetModel<List<Category>>> observable = service.getCategoryList();
