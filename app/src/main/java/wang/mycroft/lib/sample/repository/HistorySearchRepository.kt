@@ -1,10 +1,10 @@
 package wang.mycroft.lib.sample.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.HistoryKey
 import wang.mycroft.lib.sample.model.HotKey
 import wang.mycroft.lib.sample.net.NetModel
@@ -39,20 +39,17 @@ class HistorySearchRepository : ViewModel() {
 
     private var disposable: Disposable? = null
 
-    private var hotKeyDisposable: Disposable? = null
-
     fun loadHotKeyList() {
-        if (hotKeyDisposable != null) {
-            return
-        }
 
-        hotKeyDisposable = NetService.getInstance().hotKeyList
-            .subscribe({ hotKeys ->
-                hotKeyListLiveData.value = hotKeys
-            }, { throwable ->
-                hotKeyDisposable = null
-                hotKeyListLiveData.value = NetModel<List<HotKey>>(-1, throwable.message, null)
-            }, { hotKeyDisposable = null })
+        viewModelScope.launch {
+            try {
+                hotKeyListLiveData.value = withContext(Dispatchers.IO) {
+                    NetService.getHotKeyList()
+                }
+            } catch (e: Exception) {
+                hotKeyListLiveData.value = NetModel.error(e)
+            }
+        }
     }
 
     fun loadHistorySearchList() {

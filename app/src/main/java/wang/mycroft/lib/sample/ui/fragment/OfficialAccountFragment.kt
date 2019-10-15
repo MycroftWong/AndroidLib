@@ -4,14 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.blankj.utilcode.util.ToastUtils
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_official_account.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.model.OfficialAccount
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.repository.OffiialAccountRepository
+import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.adapter.recycler.OfficialAccountAdapter
 import wang.mycroft.lib.sample.ui.view.OnTabSelectedAdapter
 import wang.mycroft.lib.view.Loading
@@ -39,11 +40,19 @@ class OfficialAccountFragment : CommonFragment() {
 
     private lateinit var holder: LoadingHolder
 
+    private val officialAccountRepository: OffiialAccountRepository by lazy {
+        ViewModelProvider(this)[OffiialAccountRepository::class.java]
+    }
+
     private val officialAccountList = ArrayList<OfficialAccount>()
 
     private var adapter: OfficialAccountAdapter? = null
 
-    private var disposable: Disposable? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        officialAccountRepository.officialAccountList.observe(this, officialAccountObserver)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +63,7 @@ class OfficialAccountFragment : CommonFragment() {
 
         holder = Loading.getDefault().wrap(view).withRetry {
             holder.showLoading()
-            loadData()
+            officialAccountRepository.loadOfficialAccountList()
         }
         return holder.wrapper
     }
@@ -83,25 +92,18 @@ class OfficialAccountFragment : CommonFragment() {
     override fun onResume() {
         super.onResume()
         if (officialAccountList.isEmpty()) {
-            loadData()
+            officialAccountRepository.loadOfficialAccountList()
         }
     }
 
-    private fun loadData() {
-        if (disposable != null) {
-            return
-        }
-
-        disposable = NetService.getInstance().officialAccountList
-            .subscribe({ officialAccounts ->
+    private val officialAccountObserver =
+        Observer<ResultModel<List<OfficialAccount>>> { resultModel ->
+            if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
                 holder.showLoadSuccess()
-                officialAccountList.addAll(officialAccounts)
-                adapter!!.notifyDataSetChanged()
-            }, { throwable ->
-                disposable = null
+                officialAccountList.addAll(resultModel.data)
+                adapter?.notifyDataSetChanged()
+            } else {
                 holder.showLoadFailed()
-                ToastUtils.showShort(throwable.message)
-            }, { disposable = null })
-    }
-
+            }
+        }
 }

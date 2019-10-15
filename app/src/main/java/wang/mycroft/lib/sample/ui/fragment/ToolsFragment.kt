@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.blankj.utilcode.util.ToastUtils
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_category.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
+import wang.mycroft.lib.sample.model.Tools
 import wang.mycroft.lib.sample.model.ToolsHeader
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.repository.ToolsRepository
+import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.adapter.recycler.ToolsAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
-import wang.mycroft.lib.util.DisposableUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
 import java.util.*
@@ -39,11 +40,18 @@ class ToolsFragment : CommonFragment() {
         }
     }
 
+    private val toolsRepository: ToolsRepository by lazy {
+        ViewModelProvider(this)[ToolsRepository::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        toolsRepository.toolsList.observe(this, toolsListObserver)
+    }
+
     private var holder: LoadingHolder? = null
 
     private var adapter: ToolsAdapter? = null
-
-    private var disposable: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,21 +87,18 @@ class ToolsFragment : CommonFragment() {
     }
 
     private fun loadData() {
-        if (disposable != null) {
-            return
-        }
+        toolsRepository.loadToolsList()
+    }
 
-        disposable = NetService.getInstance().toolList
-            .subscribe({ toolsList ->
-                holder?.showLoadSuccess()
-                for (item in toolsList) {
-                    adapter!!.addData(ToolsHeader(item))
-                }
-            }, { throwable ->
-                disposable = null
-                holder?.showLoadFailed()
-                ToastUtils.showShort(throwable.message)
-            }, { disposable = null })
+    private val toolsListObserver = Observer<ResultModel<List<Tools>>> { resultModel ->
+        if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
+            holder?.showLoadSuccess()
+            for (item in resultModel.data) {
+                adapter!!.addData(ToolsHeader(item))
+            }
+        } else {
+            holder?.showLoadFailed()
+        }
     }
 
     override fun onResume() {
@@ -104,9 +109,6 @@ class ToolsFragment : CommonFragment() {
     }
 
     override fun onDestroyView() {
-        DisposableUtil.dispose(disposable)
-        disposable = null
-
         BaseQuickAdapterUtil.releaseAdapter(adapter)
         adapter = null
         super.onDestroyView()

@@ -43,7 +43,7 @@ object HistoryKeyServiceImpl : IHistoryKeyService {
     }
 
     private fun <T> async(): FlowableTransformer<T, T> {
-        return FlowableTransformer<T, T> { upstream ->
+        return FlowableTransformer { upstream ->
             upstream.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

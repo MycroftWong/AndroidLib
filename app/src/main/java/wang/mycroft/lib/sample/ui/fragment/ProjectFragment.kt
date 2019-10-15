@@ -93,7 +93,7 @@ class ProjectFragment : CommonFragment() {
             return
         }
 
-        disposable = NetService.getInstance().projectList
+        disposable = NetService.getProjectList()
             .subscribe({ projects ->
 
                 holder.showLoadSuccess()

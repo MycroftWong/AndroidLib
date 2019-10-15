@@ -1,10 +1,10 @@
 package wang.mycroft.lib.sample.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import io.reactivex.disposables.Disposable
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Article
 import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
@@ -12,7 +12,6 @@ import wang.mycroft.lib.sample.net.NetModel
 import wang.mycroft.lib.sample.net.NetService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
-import wang.mycroft.lib.util.DisposableUtil
 
 /**
  *
@@ -29,23 +28,20 @@ class HomeRepository : ViewModel() {
             return@map SimpleResultModel<ListData<Article>>(it)
         }
 
-    private var disposable: Disposable? = null
-
     fun loadArticleList(page: Int) {
-        disposable = NetService.getInstance().getHomeArticleList(page)
-            .subscribe({
-                articleListNetLiveData.value = it
-            }, { throwable ->
-                disposable = null
-                articleListNetLiveData.value = NetModel.error(throwable)
-            }, {
-                disposable = null
-            })
+
+        viewModelScope.launch {
+            try {
+                articleListNetLiveData.value = withContext(Dispatchers.IO) {
+                    NetService.getHomeArticleList(page)
+                }
+            } catch (e: Exception) {
+                articleListNetLiveData.value = NetModel.error(e)
+            }
+        }
     }
 
     private val bannerListNetLiveData = MutableLiveData<NetModel<List<Banner>>>()
-
-    private var bannerDisposable: Disposable? = null
 
     val bannerList: LiveData<ResultModel<List<Banner>>> =
         Transformations.map(bannerListNetLiveData) {
@@ -53,15 +49,15 @@ class HomeRepository : ViewModel() {
         }
 
     fun loadBannerList() {
-        bannerDisposable = NetService.getInstance().homeBannerList
-            .subscribe({
-                bannerListNetLiveData.value = it
-            }, { throwable ->
-                bannerDisposable = null
-                bannerListNetLiveData.value = NetModel.error(throwable)
-            }, {
-                bannerDisposable = null
-            })
+        viewModelScope.launch {
+            try {
+                bannerListNetLiveData.value = withContext(Dispatchers.IO) {
+                    NetService.getHomeBannerList()
+                }
+            } catch (e: Exception) {
+                bannerListNetLiveData.value = NetModel.error(e)
+            }
+        }
     }
 
     private val topArticleListNetLiveData = MutableLiveData<NetModel<List<Article>>>()
@@ -71,23 +67,18 @@ class HomeRepository : ViewModel() {
             SimpleResultModel(it)
         }
 
-    private var topArticleDisposable: Disposable? = null
-
     fun loadTopArticleList() {
-        topArticleDisposable = NetService.getInstance().topArticleList.subscribe({
-            topArticleListNetLiveData.value = it
-        }, {
-            topArticleDisposable = null
-            topArticleListNetLiveData.value = NetModel.error(it)
-        }, {
-            topArticleDisposable = null
-        })
+        viewModelScope.launch {
+            try {
+                topArticleListNetLiveData.value = NetService.getTopArticleList()
+            } catch (e: Exception) {
+                topArticleListNetLiveData.value = NetModel.error(e)
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        DisposableUtil.dispose(disposable)
-        disposable = null
-
+        viewModelScope.cancel()
     }
 }

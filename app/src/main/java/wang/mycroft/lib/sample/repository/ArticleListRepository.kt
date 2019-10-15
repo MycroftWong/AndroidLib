@@ -1,17 +1,16 @@
 package wang.mycroft.lib.sample.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import io.reactivex.disposables.Disposable
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Article
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.net.NetModel
 import wang.mycroft.lib.sample.net.NetService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
-import wang.mycroft.lib.util.DisposableUtil
 
 /**
  *
@@ -30,23 +29,19 @@ class ArticleListRepository : ViewModel() {
             return@map SimpleResultModel<ListData<Article>>(it)
         }
 
-    private var disposable: Disposable? = null
-
     fun loadArticleList(page: Int) {
-        disposable = NetService.getInstance().getArticleList(articleUrl, page)
-            .subscribe({
-                articleListData.value = it
-            }, { throwable ->
-                disposable = null
-                articleListData.value = NetModel.error(throwable)
-            }, {
-                disposable = null
-            })
+        viewModelScope.launch {
+            try {
+                articleListData.value =
+                    withContext(Dispatchers.IO) { NetService.getArticleList(articleUrl!!, page) }
+            } catch (e: Exception) {
+                articleListData.value = NetModel.error(e)
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        DisposableUtil.dispose(disposable)
-        disposable = null
+        viewModelScope.cancel()
     }
 }
