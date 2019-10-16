@@ -109,8 +109,6 @@ class HistorySearchFragment : CommonFragment() {
         if (hotKeyList.isEmpty()) {
             historySearchRepository.loadHotKeyList()
         }
-
-        historySearchRepository.loadHistorySearchList()
     }
 
     private val hotKeyObserver: Observer<ResultModel<List<HotKey>>> by lazy {

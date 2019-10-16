@@ -45,10 +45,6 @@ class HistorySearchRepository : ViewModel() {
         }
     }
 
-    fun loadHistorySearchList() {
-
-    }
-
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
