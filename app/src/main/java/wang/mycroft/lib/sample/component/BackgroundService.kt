@@ -4,9 +4,9 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import com.blankj.utilcode.util.AppUtils
-import io.reactivex.Flowable
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import wang.mycroft.lib.sample.dao.AppDatabase
 import wang.mycroft.lib.sample.dao.HistoryKeyDao
 import wang.mycroft.lib.sample.model.HistoryKey
@@ -19,67 +19,6 @@ import wang.mycroft.lib.sample.model.HistoryKey
  */
 
 class BackgroundService : IntentService(AppUtils.getAppName() + ".background") {
-
-    private var historyKeyDao: HistoryKeyDao? = null
-
-    override fun onHandleIntent(intent: Intent?) {
-        if (intent != null) {
-            val appDatabase = AppDatabase.getInstance()
-            historyKeyDao = appDatabase.historyKeyDao()
-
-            val action = intent.action
-            if (ACTION_ADD == action) {
-                val key = intent.getStringExtra(EXTRA_HISTORY_KEY)
-                addHistory(key)
-            } else if (ACTION_CLEAR == action) {
-                clearHistory()
-            } else if (ACTION_DELETE == action) {
-                val historyKey = intent.getParcelableExtra<HistoryKey>(EXTRA_HISTORY_KEY)
-                deleteHistoryKey(historyKey)
-            }
-        }
-    }
-
-    /**
-     * 添加搜索关键字
-     *
-     * @param key 搜索关键字
-     */
-    private fun addHistory(key: String) {
-        val historyKey = HistoryKey()
-        historyKey.key = key
-        historyKey.date = System.currentTimeMillis()
-
-        val queried = historyKeyDao!!.getHistoryKey(key)
-        val flowable: Flowable<Long>
-        if (queried == null) {
-            flowable = Flowable.just(historyKeyDao!!.add(historyKey)!!)
-        } else {
-            historyKey.id = queried.id
-            flowable = Flowable.just(historyKeyDao!!.updateHistoryKey(historyKey).toLong())
-        }
-        flowable.subscribe(INSTANCE)
-    }
-
-    /**
-     * 清空搜索历史关键字
-     */
-    private fun clearHistory() {
-        historyKeyDao!!.allHistoryKey
-            .map { historyKeys -> historyKeyDao!!.deleteAll(historyKeys).toLong() }
-            .subscribe(INSTANCE)
-    }
-
-    /**
-     * 删除历史关键字
-     *
-     * @param historyKey 历史关键字
-     */
-    private fun deleteHistoryKey(historyKey: HistoryKey) {
-        Flowable.just(historyKeyDao!!.delete(historyKey))
-            .map { it.toLong() }
-            .subscribe(INSTANCE)
-    }
 
     companion object {
 
@@ -112,27 +51,66 @@ class BackgroundService : IntentService(AppUtils.getAppName() + ".background") {
             intent.putExtra(EXTRA_HISTORY_KEY, historyKey)
             context.startService(intent)
         }
+    }
 
-        /**
-         * 处理异常等信息的空Subscriber
-         */
-        private val INSTANCE = object : Subscriber<Long> {
+    private var historyKeyDao: HistoryKeyDao? = null
 
-            override fun onSubscribe(s: Subscription) {
+    override fun onHandleIntent(intent: Intent?) {
+        if (intent != null) {
+            historyKeyDao = AppDatabase.getHistoryKeyDao()
 
-            }
-
-            override fun onNext(aLong: Long?) {
-
-            }
-
-            override fun onError(t: Throwable) {
-
-            }
-
-            override fun onComplete() {
-
+            GlobalScope.launch(Dispatchers.IO) {
+                val action = intent.action
+                when {
+                    ACTION_ADD == action -> {
+                        val key = intent.getStringExtra(EXTRA_HISTORY_KEY)
+                        addHistory(key)
+                    }
+                    ACTION_CLEAR == action -> clearHistory()
+                    ACTION_DELETE == action -> {
+                        val historyKey = intent.getParcelableExtra<HistoryKey>(EXTRA_HISTORY_KEY)
+                        deleteHistoryKey(historyKey)
+                    }
+                }
             }
         }
     }
+
+    /**
+     * 添加搜索关键字
+     *
+     * @param key 搜索关键字
+     */
+    private suspend fun addHistory(key: String) {
+        val historyKey = HistoryKey()
+        historyKey.key = key
+        historyKey.date = System.currentTimeMillis()
+
+        val queried = historyKeyDao!!.getHistoryKey(key)
+        if (queried == null) {
+            historyKeyDao!!.add(historyKey)
+        } else {
+            historyKey.id = queried.id
+            historyKeyDao!!.updateHistoryKey(historyKey)
+        }
+    }
+
+    /**
+     * 清空搜索历史关键字
+     */
+    private suspend fun clearHistory() {
+        historyKeyDao!!.getAllHistoryKey().value?.let {
+            historyKeyDao!!.deleteAll(it)
+        }
+    }
+
+    /**
+     * 删除历史关键字
+     *
+     * @param historyKey 历史关键字
+     */
+    private suspend fun deleteHistoryKey(historyKey: HistoryKey) {
+        historyKeyDao!!.delete(historyKey)
+    }
+
 }

@@ -39,7 +39,6 @@ class SearchResultRepository : ViewModel() {
             }
 
         }
-
     }
 
     override fun onCleared() {

@@ -3,10 +3,6 @@ package wang.mycroft.lib.sample.net
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.mycroft.lib.net.RemoteService
-import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,7 +15,6 @@ import wang.mycroft.lib.net.StringConverterFactory
 import wang.mycroft.lib.net.cookiejar.PersistentCookieJar
 import wang.mycroft.lib.net.cookiejar.cache.SetCookieCache
 import wang.mycroft.lib.net.cookiejar.persistence.SharedPrefsCookiePersistor
-import wang.mycroft.lib.sample.exception.NetDataException
 import wang.mycroft.lib.sample.model.*
 import wang.mycroft.lib.sample.service.FileServiceImpl
 import java.util.*
@@ -35,7 +30,6 @@ object NetService {
 
         val fileService = FileServiceImpl
 
-//        val loggingInterceptor = HttpLoggingInterceptor(Logger { LogUtils.w(it) })
         val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
                 LogUtils.w(message)
@@ -113,37 +107,5 @@ object NetService {
 
     suspend fun search(key: String, page: Int): NetModel<ListData<Article>> {
         return service.search(key, page)
-    }
-
-    private fun <T> handleResult(observable: Observable<NetModel<T>>): Observable<T> {
-        return observable
-            .subscribeOn(Schedulers.io())
-            .unsubscribeOn(Schedulers.io())
-            .map<T> { articleListModelNetModel ->
-                if (articleListModelNetModel.errorCode == 0) {
-                    return@map articleListModelNetModel.data
-                } else {
-                    throw NetDataException.newInstance(articleListModelNetModel.errorMsg)
-                }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    private fun <T> handleResult2(observable: Observable<NetModel<T>>): Observable<NetModel<T>> {
-        return observable.compose(async())
-    }
-
-    /**
-     * 线程切换
-     *
-     * @param <T>
-     * @return
-    </T> */
-    private fun <T> async(): ObservableTransformer<T, T> {
-        return ObservableTransformer { upstream ->
-            upstream.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-        }
     }
 }

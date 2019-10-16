@@ -1,8 +1,8 @@
 package wang.mycroft.lib.sample.repository
 
 import androidx.lifecycle.*
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.HistoryKey
@@ -30,14 +30,7 @@ class HistorySearchRepository : ViewModel() {
 
     private val historyKeyService: IHistoryKeyService = HistoryKeyServiceImpl
 
-    private val historySearchListLiveData = MutableLiveData<List<HistoryKey>>()
-
-    val historySearchList: LiveData<List<HistoryKey>> =
-        Transformations.map(historySearchListLiveData) {
-            it
-        }
-
-    private var disposable: Disposable? = null
+    val historySearchList: LiveData<List<HistoryKey>> = historyKeyService.getAllHistoryKey()
 
     fun loadHotKeyList() {
 
@@ -53,13 +46,11 @@ class HistorySearchRepository : ViewModel() {
     }
 
     fun loadHistorySearchList() {
-        disposable = historyKeyService
-            .allHistoryKey
-            .subscribe({ historyKeys ->
-                historySearchListLiveData.value = historyKeys
-            }, {
-                disposable = null
-                historySearchListLiveData.value = listOf()
-            }, { disposable = null })
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }

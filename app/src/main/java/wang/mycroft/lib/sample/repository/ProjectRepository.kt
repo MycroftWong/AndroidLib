@@ -1,6 +1,7 @@
 package wang.mycroft.lib.sample.repository
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import wang.mycroft.lib.sample.model.Project
 import wang.mycroft.lib.sample.net.NetModel
@@ -25,5 +26,10 @@ class ProjectRepository : ViewModel() {
                 projectListLiveData.value = NetModel.error(e)
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }

@@ -16,9 +16,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Loading.initDefault(SpinLoadingAdapter())
 
         Utils.init(this)
+
+        Loading.initDefault(SpinLoadingAdapter())
+
         LogUtils.getConfig().isLogSwitch = true
     }
 }

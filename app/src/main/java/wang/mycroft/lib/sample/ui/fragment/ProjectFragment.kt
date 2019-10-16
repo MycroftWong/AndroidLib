@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.blankj.utilcode.util.ToastUtils
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_official_account.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.model.Project
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.repository.ProjectRepository
+import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.adapter.pager.ProjectPagerAdapter
 import wang.mycroft.lib.sample.ui.view.OnTabSelectedAdapter
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
-import java.util.*
 
 /**
  *
@@ -38,13 +38,20 @@ class ProjectFragment : CommonFragment() {
         }
     }
 
+    private val projectRepository: ProjectRepository by lazy {
+        ViewModelProvider(this)[ProjectRepository::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        projectRepository.projectList.observe(this, projectListObserver)
+    }
+
     private lateinit var holder: LoadingHolder
 
-    private val projectList = ArrayList<Project>()
+    private val projectList = mutableListOf<Project>()
 
     private lateinit var adapter: ProjectPagerAdapter
-
-    private var disposable: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +62,8 @@ class ProjectFragment : CommonFragment() {
 
         holder = Loading.getDefault().wrap(view).withRetry {
             holder.showLoading()
-            loadData()
+            projectRepository.loadProjectList()
+
         }
         return holder.wrapper
     }
@@ -84,26 +92,18 @@ class ProjectFragment : CommonFragment() {
     override fun onResume() {
         super.onResume()
         if (projectList.isEmpty()) {
-            loadData()
+            projectRepository.loadProjectList()
         }
     }
 
-    private fun loadData() {
-        if (disposable != null) {
-            return
+    private val projectListObserver = Observer<ResultModel<List<Project>>> { resultModel ->
+        if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
+            holder.showLoadSuccess()
+            projectList.addAll(resultModel.data)
+            adapter.notifyDataSetChanged()
+        } else {
+            holder.showLoadFailed()
         }
-
-        disposable = NetService.getProjectList()
-            .subscribe({ projects ->
-
-                holder.showLoadSuccess()
-                projectList.addAll(projects)
-                adapter.notifyDataSetChanged()
-            }, { throwable ->
-                disposable = null
-                holder.showLoadFailed()
-                ToastUtils.showShort(throwable.message)
-            }, { disposable = null })
     }
 
 }
