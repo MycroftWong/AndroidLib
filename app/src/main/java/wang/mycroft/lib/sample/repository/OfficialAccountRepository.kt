@@ -11,7 +11,7 @@ import wang.mycroft.lib.sample.net.NetService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
-class OffiialAccountRepository : ViewModel() {
+class OfficialAccountRepository : ViewModel() {
 
     private val officialAccountListLiveData = MutableLiveData<NetModel<List<OfficialAccount>>>()
 

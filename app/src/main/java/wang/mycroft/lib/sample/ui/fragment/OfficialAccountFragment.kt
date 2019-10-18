@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_official_account.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.model.OfficialAccount
-import wang.mycroft.lib.sample.repository.OffiialAccountRepository
+import wang.mycroft.lib.sample.repository.OfficialAccountRepository
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.adapter.recycler.OfficialAccountAdapter
 import wang.mycroft.lib.sample.ui.view.OnTabSelectedAdapter
@@ -40,8 +40,8 @@ class OfficialAccountFragment : CommonFragment() {
 
     private lateinit var holder: LoadingHolder
 
-    private val officialAccountRepository: OffiialAccountRepository by lazy {
-        ViewModelProvider(this)[OffiialAccountRepository::class.java]
+    private val officialAccountRepository: OfficialAccountRepository by lazy {
+        ViewModelProvider(this)[OfficialAccountRepository::class.java]
     }
 
     private val officialAccountList = ArrayList<OfficialAccount>()
