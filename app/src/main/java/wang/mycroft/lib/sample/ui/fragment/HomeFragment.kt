@@ -17,7 +17,7 @@ import com.hjq.bar.OnTitleBarListener
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.loader.ImageLoader
-import kotlinx.android.synthetic.main.fragment_home.titleBar
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.vertical_refresh_recycler.*
 import wang.mycroft.lib.net.GlideApp
 import wang.mycroft.lib.sample.R
@@ -224,6 +224,8 @@ class HomeFragment : CommonFragment() {
                     articleTypeModels.clear()
                 }
                 nextPage = listData.curPage + 1
+
+                refreshLayout.setNoMoreData(listData.curPage >= listData.pageCount)
 
                 for (item in listData.datas) {
                     articleTypeModels.add(ArticleTypeModel(item))

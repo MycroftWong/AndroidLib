@@ -132,6 +132,6 @@ andResGuard {
     ]
 
     sevenzip {
-        artifact = 'com.tencent.mm:SevenZip:1.2.10'
+        artifact = 'com.tencent.mm:SevenZip:1.2.17'
     }
 }

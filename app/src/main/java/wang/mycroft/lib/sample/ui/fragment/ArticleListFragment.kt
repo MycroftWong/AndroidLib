@@ -186,7 +186,7 @@ class ArticleListFragment : CommonFragment() {
     }
 
     private val observer = Observer<ResultModel<ListData<Article>>> { resultModel ->
-        if (resultModel.errorCode != 0) {
+        if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
             if (articleTypeModels.isEmpty()) {
                 holder.showLoadFailed()
             } else {
@@ -200,6 +200,8 @@ class ArticleListFragment : CommonFragment() {
                 articleTypeModels.clear()
             }
             nextPage = listData.curPage + 1
+
+            refreshLayout.setNoMoreData(listData.curPage >= listData.pageCount)
 
             for (item in listData.datas) {
                 articleTypeModels.add(ArticleTypeModel(item))
