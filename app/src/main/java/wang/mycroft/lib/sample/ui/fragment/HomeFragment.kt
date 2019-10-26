@@ -57,8 +57,8 @@ class HomeFragment : CommonFragment() {
         }
     }
 
-    private val homeRepository by lazy {
-        ViewModelProvider(this).get(HomeRepository::class.java)
+    private val homeRepository: HomeRepository by lazy {
+        ViewModelProvider(this)[HomeRepository::class.java]
     }
 
     private var nextPage = START_PAGE

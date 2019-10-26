@@ -27,4 +27,5 @@
         app:itemTextAppearanceInactive="@style/MainBottomNavigationTextAppearanceInactive"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_main" />
+
 </FrameLayout>

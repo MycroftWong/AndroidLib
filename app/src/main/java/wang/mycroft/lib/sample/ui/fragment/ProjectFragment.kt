@@ -51,7 +51,7 @@ class ProjectFragment : CommonFragment() {
 
     private val projectList = mutableListOf<Project>()
 
-    private lateinit var adapter: ProjectPagerAdapter
+    private var adapter: ProjectPagerAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,7 +100,7 @@ class ProjectFragment : CommonFragment() {
         if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
             holder.showLoadSuccess()
             projectList.addAll(resultModel.data)
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
         } else {
             holder.showLoadFailed()
         }

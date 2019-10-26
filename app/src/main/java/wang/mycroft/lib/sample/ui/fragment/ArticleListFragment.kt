@@ -54,7 +54,9 @@ class ArticleListFragment : CommonFragment() {
     private var articleUrl: String? = null
     private var startPage: Int = 0
 
-    private var articleListRepository: ArticleListRepository? = null
+    private val articleListRepository: ArticleListRepository by lazy {
+        ViewModelProvider(this)[ArticleListRepository::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +76,8 @@ class ArticleListFragment : CommonFragment() {
 
         nextPage = startPage
 
-        articleListRepository = ViewModelProvider(this).get(ArticleListRepository::class.java)
-        articleListRepository!!.articleUrl = articleUrl
-        articleListRepository!!.articleList.observe(this, observer)
+        articleListRepository.articleUrl = articleUrl
+        articleListRepository.articleList.observe(this, observer)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -151,8 +152,7 @@ class ArticleListFragment : CommonFragment() {
         if (!isLoading) {
             holder.showLoading()
             isLoading = true
-            articleListRepository!!.loadArticleList(page)
-
+            articleListRepository.loadArticleList(page)
         }
     }
 

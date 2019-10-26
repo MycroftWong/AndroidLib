@@ -35,7 +35,9 @@ import java.util.*
  */
 class HistorySearchFragment : CommonFragment() {
 
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by lazy {
+        ViewModelProvider(activity!!).get(SearchViewModel::class.java)
+    }
 
     private val historyKeyService: IHistoryKeyService = HistoryKeyServiceImpl
 
@@ -49,13 +51,13 @@ class HistorySearchFragment : CommonFragment() {
         historyKeyService.clearHistoryKey()
     }
 
-    private lateinit var historySearchRepository: HistorySearchRepository
+    private val historySearchRepository: HistorySearchRepository by lazy {
+        ViewModelProvider(this)[HistorySearchRepository::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchViewModel = ViewModelProvider(activity!!).get(SearchViewModel::class.java)
 
-        historySearchRepository = ViewModelProvider(this)[HistorySearchRepository::class.java]
         historySearchRepository.hotKeyList.observe(this, hotKeyObserver)
         historySearchRepository.historySearchList.observe(this, historySearchListObserver)
     }

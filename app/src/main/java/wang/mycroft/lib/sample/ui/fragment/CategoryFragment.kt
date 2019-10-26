@@ -44,7 +44,9 @@ class CategoryFragment : CommonFragment() {
     private lateinit var holder: LoadingHolder
     private var adapter: CategoryAdapter? = null
 
-    private lateinit var categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository by lazy {
+        ViewModelProvider(this)[CategoryRepository::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +56,10 @@ class CategoryFragment : CommonFragment() {
             categoryList.addAll(categories)
         }
 
-        categoryRepository = ViewModelProvider(this)[CategoryRepository::class.java]
         categoryRepository.categoryList.observe(
             this,
             Observer<ResultModel<List<Category>>> { resultModel ->
-                if (resultModel.errorCode != 0) {
+                if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
                     holder.showLoadFailed()
                 } else {
                     holder.showLoadSuccess()

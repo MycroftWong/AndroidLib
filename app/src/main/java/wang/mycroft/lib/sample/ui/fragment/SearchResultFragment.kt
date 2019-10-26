@@ -118,7 +118,7 @@ class SearchResultFragment : CommonFragment() {
     private val observer: Observer<ResultModel<ListData<Article>>> by lazy {
         Observer<ResultModel<ListData<Article>>> { resultModel ->
             finishRefresh()
-            if (resultModel.errorCode != 0) {
+            if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
                 ToastUtils.showShort(resultModel.errorMsg)
             } else {
                 val listData = resultModel.data
