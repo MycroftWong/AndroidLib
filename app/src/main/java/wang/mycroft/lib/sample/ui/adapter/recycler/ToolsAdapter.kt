@@ -1,8 +1,13 @@
 package wang.mycroft.lib.sample.ui.adapter.recycler
 
+import android.app.Activity
+import android.app.ActivityOptions
+import android.util.Pair
+import com.blankj.utilcode.util.StringUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.model.ToolsContent
 import wang.mycroft.lib.sample.model.ToolsHeader
 import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
@@ -46,13 +51,18 @@ class ToolsAdapter(data: List<MultiItemEntity>?) :
                 val content = item as ToolsContent
                 helper.setText(android.R.id.text1, content.article.title)
                 helper.itemView.setOnClickListener {
+                    val options = ActivityOptions.makeSceneTransitionAnimation(
+                        helper.itemView.context as Activity, Pair(
+                            it, StringUtils.getString(R.string.transition_content)
+                        )
+                    )
                     helper.itemView.context
                         .startActivity(
                             ArticleWebViewActivity.getIntent(
                                 helper.itemView.context,
                                 content.article.title,
                                 content.article.link
-                            )
+                            ),options.toBundle()
                         )
                 }
             }

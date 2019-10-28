@@ -1,12 +1,15 @@
 package wang.mycroft.lib.sample.ui.fragment
 
+import android.app.ActivityOptions
 import android.os.Bundle
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
@@ -80,13 +83,17 @@ class SearchResultFragment : CommonFragment() {
 
         adapter = ArticleListAdapter(searchResultList)
 
-        adapter!!.setOnItemClickListener { _, _, position ->
+        adapter!!.setOnItemClickListener { _, itemView, position ->
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                activity!!,
+                Pair(itemView, StringUtils.getString(R.string.transition_content))
+            )
             startActivity(
                 ArticleWebViewActivity.getIntent(
                     context!!,
                     searchResultList[position].article.title,
                     searchResultList[position].article.link
-                )
+                ), options.toBundle()
             )
         }
 

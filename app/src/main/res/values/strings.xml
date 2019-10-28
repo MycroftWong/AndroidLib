@@ -17,4 +17,6 @@
 
     <string name="title_all_permission">权限说明</string>
     <string name="message_all_permission">APP需要该权限才可以正常运行</string>
+
+    <string name="transition_content">transition_web_view</string>
 </resources>

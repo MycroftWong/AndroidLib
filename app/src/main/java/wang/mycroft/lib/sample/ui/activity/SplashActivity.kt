@@ -34,10 +34,6 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
     }
 
     override fun loadData() {
-        doInit2()
-    }
-
-    private fun doInit2() {
         launch {
             val startTime = System.currentTimeMillis()
             withContext(Dispatchers.IO) {
@@ -59,6 +55,12 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
 
             goMainPageWithPermissionCheck()
         }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
     }
 
     @NeedsPermission(

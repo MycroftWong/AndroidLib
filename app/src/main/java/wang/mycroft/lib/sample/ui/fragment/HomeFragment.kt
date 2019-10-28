@@ -1,7 +1,9 @@
 package wang.mycroft.lib.sample.ui.fragment
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.os.Bundle
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.hjq.bar.OnTitleBarListener
@@ -197,13 +200,17 @@ class HomeFragment : CommonFragment() {
         }
     }
 
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, view, position ->
+        val options = ActivityOptions.makeSceneTransitionAnimation(
+            activity!!,
+            Pair(view, StringUtils.getString(R.string.transition_content))
+        )
         startActivity(
             ArticleWebViewActivity.getIntent(
                 context!!,
                 articleTypeModels[position].article.title,
                 articleTypeModels[position].article.link
-            )
+            ), options.toBundle()
         )
     }
 
