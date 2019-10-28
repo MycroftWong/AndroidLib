@@ -21,7 +21,7 @@ import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.service.HistoryKeyServiceImpl
 import wang.mycroft.lib.sample.service.IHistoryKeyService
 import wang.mycroft.lib.sample.shared.SearchViewModel
-import wang.mycroft.lib.sample.ui.activity.WebViewActivity
+import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import java.util.*
@@ -82,7 +82,7 @@ class SearchResultFragment : CommonFragment() {
 
         adapter!!.setOnItemClickListener { _, _, position ->
             startActivity(
-                WebViewActivity.getIntent(
+                ArticleWebViewActivity.getIntent(
                     context!!,
                     searchResultList[position].article.title,
                     searchResultList[position].article.link

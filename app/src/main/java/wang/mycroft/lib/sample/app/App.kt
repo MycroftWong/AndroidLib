@@ -3,6 +3,7 @@ package wang.mycroft.lib.sample.app
 import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
+import com.tencent.smtt.sdk.QbSdk
 import wang.mycroft.lib.sample.ui.view.SpinLoadingAdapter
 import wang.mycroft.lib.view.Loading
 
@@ -22,5 +23,7 @@ class App : Application() {
         Loading.initDefault(SpinLoadingAdapter())
 
         LogUtils.getConfig().isLogSwitch = true
+
+        QbSdk.initX5Environment(this, null)
     }
 }

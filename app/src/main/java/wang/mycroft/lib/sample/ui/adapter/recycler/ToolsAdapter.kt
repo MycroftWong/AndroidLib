@@ -5,7 +5,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import wang.mycroft.lib.sample.model.ToolsContent
 import wang.mycroft.lib.sample.model.ToolsHeader
-import wang.mycroft.lib.sample.ui.activity.WebViewActivity
+import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 
 /**
  *
@@ -48,7 +48,7 @@ class ToolsAdapter(data: List<MultiItemEntity>?) :
                 helper.itemView.setOnClickListener {
                     helper.itemView.context
                         .startActivity(
-                            WebViewActivity.getIntent(
+                            ArticleWebViewActivity.getIntent(
                                 helper.itemView.context,
                                 content.article.title,
                                 content.article.link

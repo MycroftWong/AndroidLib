@@ -28,8 +28,8 @@ import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.repository.HomeRepository
 import wang.mycroft.lib.sample.repository.model.ResultModel
+import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 import wang.mycroft.lib.sample.ui.activity.SearchActivity
-import wang.mycroft.lib.sample.ui.activity.WebViewActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
@@ -199,7 +199,7 @@ class HomeFragment : CommonFragment() {
 
     private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         startActivity(
-            WebViewActivity.getIntent(
+            ArticleWebViewActivity.getIntent(
                 context!!,
                 articleTypeModels[position].article.title,
                 articleTypeModels[position].article.link
