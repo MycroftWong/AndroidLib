@@ -29,22 +29,6 @@ android {
         sourceCompatibility versions.jdk
         targetCompatibility versions.jdk
     }
-
-    // 强制 rxjava 3.0
-    configurations {
-        compile.exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
-        all {
-            resolutionStrategy {
-                eachDependency { DependencyResolveDetails details ->
-                    if (details.requested.group == 'io.reactivex.rxjava3' &&
-                            details.requested.name == 'rxjava') {
-                        details.useVersion '3.0.0-RC1'
-                        details.because 'Unified the version of RxJava3'
-                    }
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -80,11 +64,6 @@ dependencies {
     api "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}"
 
     api "com.squareup.retrofit2:retrofit:${versions.retrofit}"
-    api "io.reactivex.rxjava3:rxjava:${versions.rxjava}"
-    api "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}"
-//    api 'io.reactivex.rxjava3:rxandroid:3.0.0-SNAPSHOT'
-    api "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
-
     api "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
 
     api "com.github.bumptech.glide:glide:${versions.glide}"
@@ -93,8 +72,6 @@ dependencies {
 
     api "com.github.CymChad:BaseRecyclerViewAdapterHelper:${versions.BRAV}"
     api  "com.scwang.smart:refresh-layout-kernel:${versions.SmartRefreshLayout}"
-
-    api "com.github.tbruyelle:rxpermissions:${versions.rxpermissions}"
 
     // immersion bar
     api "com.gyf.immersionbar:immersionbar:${versions.immersionbar}"

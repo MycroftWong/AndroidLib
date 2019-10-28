@@ -2,14 +2,13 @@ package wang.mycroft.lib.sample.net
 
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
-import com.mycroft.lib.net.RemoteService
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import wang.mycroft.lib.net.OkHttpClientMaker
+import wang.mycroft.lib.net.RemoteService
 import wang.mycroft.lib.net.RetrofitMaker
 import wang.mycroft.lib.net.StringConverterFactory
 import wang.mycroft.lib.net.cookiejar.PersistentCookieJar
@@ -60,7 +59,6 @@ object NetService {
             Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(httpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

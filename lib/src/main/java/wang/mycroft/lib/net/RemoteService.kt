@@ -1,4 +1,4 @@
-package com.mycroft.lib.net
+package wang.mycroft.lib.net
 
 import android.util.ArrayMap
 import com.blankj.utilcode.util.Utils
@@ -6,11 +6,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import wang.mycroft.lib.net.OkHttpClientMaker
-import wang.mycroft.lib.net.RetrofitMaker
-import wang.mycroft.lib.net.StringConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -61,7 +57,6 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
 
     private val retrofitMap = ArrayMap<String, Retrofit>(3)
 
-
     /**
      * 构造[Retrofit]
      *
@@ -76,7 +71,6 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
             retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(httpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

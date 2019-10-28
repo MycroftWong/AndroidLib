@@ -45,4 +45,8 @@
         <item name="android:textSize">@dimen/common_text_size_info</item>
         <item name="android:textColor">@color/common_text_color_info</item>
     </style>
+
+    <style name="StyleAlertDialogSplash" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@android:color/black</item>
+    </style>
 </resources>

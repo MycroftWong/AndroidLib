@@ -14,4 +14,7 @@
 
     <string name="text_label_top">置顶</string>
     <string name="text_label_fresh">新</string>
+
+    <string name="title_all_permission">权限说明</string>
+    <string name="message_all_permission">APP需要该权限才可以正常运行</string>
 </resources>

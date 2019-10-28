@@ -30,11 +30,10 @@ buildscript {
                 'okio': '2.4.1',
                 'okhttp': '4.2.2',
                 'retrofit': '2.6.2',
-                'rxjava': '3.0.0-RC1',
                 'rxandroid': '2.1.1',
                 'glide': '4.10.0',
 
-                'rxpermissions': '0.10.2',
+                'permissionsdispatcher': '4.5.0',
                 'BRAV': '2.9.49-androidx',
                 'SmartRefreshLayout': '2.0.0-alpha-1',
                 'immersionbar': '3.0.0',
