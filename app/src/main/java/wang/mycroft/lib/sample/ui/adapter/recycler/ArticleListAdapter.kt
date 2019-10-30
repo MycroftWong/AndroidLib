@@ -79,12 +79,21 @@ class ArticleListAdapter(data: List<ArticleTypeModel>) :
         val hasChapter = !TextUtils.isEmpty(result.chapterName)
 
         return if (hasSuperChapter && hasChapter) {
-            builder.append(result.superChapterName).append("\u3000").append(result.chapterName)
+            builder.append(
+                HtmlCompat.fromHtml(result.superChapterName, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            )
+                .append("\u3000")
+                .append(HtmlCompat.fromHtml(result.chapterName, HtmlCompat.FROM_HTML_MODE_COMPACT))
                 .toString()
         } else if (!hasSuperChapter && !hasChapter) {
             ""
         } else {
-            if (result.superChapterName == null) result.chapterName else result.superChapterName
+            if (result.superChapterName == null)
+                HtmlCompat.fromHtml(result.chapterName, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    .toString()
+            else
+                HtmlCompat.fromHtml(result.superChapterName, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    .toString()
         }
     }
 }

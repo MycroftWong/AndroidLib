@@ -15,7 +15,7 @@ import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 /**
  *
  * @blog: https://blog.mycroft.wang
- * @date: 2019年09月15
+ * @date: 2019年09月15日
  * @author: wangqiang
  */
 class ToolsAdapter(data: List<MultiItemEntity>?) :
@@ -65,8 +65,6 @@ class ToolsAdapter(data: List<MultiItemEntity>?) :
                             ),options.toBundle()
                         )
                 }
-            }
-            else -> {
             }
         }
     }

@@ -1,5 +1,6 @@
 package wang.mycroft.lib.sample.ui.adapter.pager
 
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -13,10 +14,8 @@ import wang.mycroft.lib.sample.ui.fragment.ArticleListFragment
  * @date: 2019年09月15
  * @author: wangqiang
  */
-class ProjectPagerAdapter(
-    fm: FragmentManager,
-    private val projectList: List<Project>
-) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class ProjectPagerAdapter(fm: FragmentManager, private val projectList: List<Project>) :
+    FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         return ArticleListFragment.newInstance(
@@ -30,6 +29,6 @@ class ProjectPagerAdapter(
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return projectList[position].name
+        return HtmlCompat.fromHtml(projectList[position].name, HtmlCompat.FROM_HTML_MODE_COMPACT)
     }
 }

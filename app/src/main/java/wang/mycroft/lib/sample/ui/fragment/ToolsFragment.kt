@@ -62,7 +62,7 @@ class ToolsFragment : CommonFragment() {
 
         holder = Loading.getDefault().wrap(view).withRetry {
             holder!!.showLoading()
-            loadData()
+            toolsRepository.loadToolsList()
         }
         return holder!!.wrapper
     }
@@ -70,15 +70,13 @@ class ToolsFragment : CommonFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = ToolsAdapter(ArrayList())
-        recyclerView.run {
-            this.adapter = this@ToolsFragment.adapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    context!!,
-                    DividerItemDecoration.VERTICAL
-                )
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context!!,
+                DividerItemDecoration.VERTICAL
             )
-        }
+        )
         if (adapter!!.data.isEmpty()) {
             holder?.showLoading()
         } else {
@@ -86,8 +84,17 @@ class ToolsFragment : CommonFragment() {
         }
     }
 
-    private fun loadData() {
-        toolsRepository.loadToolsList()
+    override fun onResume() {
+        super.onResume()
+        if (adapter!!.data.isEmpty()) {
+            toolsRepository.loadToolsList()
+        }
+    }
+
+    override fun onDestroyView() {
+        BaseQuickAdapterUtil.releaseAdapter(adapter)
+        adapter = null
+        super.onDestroyView()
     }
 
     private val toolsListObserver = Observer<ResultModel<List<Tools>>> { resultModel ->
@@ -99,19 +106,6 @@ class ToolsFragment : CommonFragment() {
         } else {
             holder?.showLoadFailed()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (adapter!!.data.isEmpty()) {
-            loadData()
-        }
-    }
-
-    override fun onDestroyView() {
-        BaseQuickAdapterUtil.releaseAdapter(adapter)
-        adapter = null
-        super.onDestroyView()
     }
 
 }

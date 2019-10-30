@@ -1,15 +1,12 @@
 package wang.mycroft.lib.sample.ui.fragment
 
-import android.app.ActivityOptions
 import android.os.Bundle
-import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
@@ -24,9 +21,12 @@ import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
-import wang.mycroft.lib.view.Loading
-import wang.mycroft.lib.view.LoadingHolder
 import java.util.*
+
+private const val ARGS_ARTICLE = "article.args"
+private const val ARGS_START_PAGE = "start_page.args"
+
+private const val SAVED_ARTICLES = "articleList.saved"
 
 /**
  *
@@ -38,19 +38,13 @@ class ArticleListFragment : CommonFragment() {
 
     companion object {
 
-        private const val ARGS_ARTICLE = "article.args"
-        private const val ARGS_START_PAGE = "start_page.args"
-
-        private const val SAVED_ARTICLES = "articleList.saved"
-
         fun newInstance(url: String, startPage: Int): ArticleListFragment {
-
-            val args = Bundle()
-            args.putString(ARGS_ARTICLE, url)
-            args.putInt(ARGS_START_PAGE, startPage)
-            val fragment = ArticleListFragment()
-            fragment.arguments = args
-            return fragment
+            return ArticleListFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARGS_ARTICLE, url)
+                    putInt(ARGS_START_PAGE, startPage)
+                }
+            }
         }
     }
 
@@ -94,20 +88,12 @@ class ArticleListFragment : CommonFragment() {
 
     private var adapter: ArticleListAdapter? = null
 
-    private lateinit var holder: LoadingHolder
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.vertical_refresh_recycler, container, false)
-        holder = Loading.getDefault().wrap(view).withRetry {
-            holder.showLoading()
-            loadData(startPage)
-        }
-
-        return holder.wrapper
+        return inflater.inflate(R.layout.vertical_refresh_recycler, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,34 +106,24 @@ class ArticleListFragment : CommonFragment() {
         )
 
         adapter = ArticleListAdapter(articleTypeModels)
-        adapter!!.setOnItemClickListener { _, itemView, position ->
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                activity!!,
-                Pair(itemView, StringUtils.getString(R.string.transition_content))
-            )
+        adapter!!.setOnItemClickListener { _, _, position ->
             startActivity(
                 ArticleWebViewActivity.getIntent(
                     context!!,
                     articleTypeModels[position].article.title,
                     articleTypeModels[position].article.link
-                ), options.toBundle()
+                )
             )
         }
         recyclerView.adapter = adapter
 
         refreshLayout.setOnRefreshLoadMoreListener(refreshLoadMoreListener)
-
-        if (articleTypeModels.isEmpty()) {
-            holder.showLoading()
-        } else {
-            holder.showLoadSuccess()
-        }
     }
 
     override fun onResume() {
         super.onResume()
         if (articleTypeModels.isEmpty()) {
-            loadData(startPage)
+            refreshLayout.autoRefresh(0, 0, 1f, false)
         }
     }
 
@@ -157,7 +133,6 @@ class ArticleListFragment : CommonFragment() {
 
     private fun loadData(page: Int) {
         if (!isLoading) {
-            holder.showLoading()
             isLoading = true
             articleListRepository.loadArticleList(page)
         }
@@ -194,14 +169,8 @@ class ArticleListFragment : CommonFragment() {
 
     private val observer = Observer<ResultModel<ListData<Article>>> { resultModel ->
         if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
-            if (articleTypeModels.isEmpty()) {
-                holder.showLoadFailed()
-            } else {
-                ToastUtils.showShort(resultModel.errorMsg)
-            }
+            ToastUtils.showShort(resultModel.errorMsg)
         } else {
-            holder.showLoadSuccess()
-
             val listData = resultModel.data
             if (listData.curPage == startPage) {
                 articleTypeModels.clear()
@@ -216,7 +185,6 @@ class ArticleListFragment : CommonFragment() {
             adapter!!.notifyDataSetChanged()
         }
         finishRefresh()
-
     }
 
 }

@@ -29,12 +29,7 @@ class ProjectFragment : CommonFragment() {
     companion object {
 
         fun newInstance(): ProjectFragment {
-
-            val args = Bundle()
-
-            val fragment = ProjectFragment()
-            fragment.arguments = args
-            return fragment
+            return ProjectFragment()
         }
     }
 

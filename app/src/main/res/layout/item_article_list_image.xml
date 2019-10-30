@@ -64,19 +64,6 @@
         tools:text="简洁美观的WAndroid" />
 
     <TextView
-        android:id="@+id/chapterText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_padding_start_end"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="@dimen/common_text_size_info"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        tools:text="JNI·JNI编程" />
-
-    <TextView
         android:id="@+id/dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,5 +72,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="2018-05-18" />
+
+    <TextView
+        android:id="@+id/chapterText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_padding_start_end"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/padding_symmetric_horizontal"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/common_text_size_info"
+        app:layout_constraintEnd_toStartOf="@id/dateText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        tools:text="JNI·JNI编程" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

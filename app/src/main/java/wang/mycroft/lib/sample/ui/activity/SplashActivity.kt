@@ -39,14 +39,12 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
             withContext(Dispatchers.IO) {
 
                 SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
-                    ClassicsHeader(
-                        context
-                    )
+                    ClassicsHeader(context).apply {
+                        setEnableLastTime(false)
+                    }
                 }
                 SmartRefreshLayout.setDefaultRefreshFooterCreator { context, _ ->
-                    ClassicsFooter(
-                        context
-                    )
+                    ClassicsFooter(context)
                 }
 
                 WebService.start(this@SplashActivity)

@@ -1,5 +1,6 @@
 package wang.mycroft.lib.sample.ui.adapter.pager
 
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -27,6 +28,9 @@ class CategoryDetailPagerAdapter(fm: FragmentManager, private val category: Cate
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return category.children[position].name
+        return HtmlCompat.fromHtml(
+            category.children[position].name,
+            HtmlCompat.FROM_HTML_MODE_COMPACT
+        )
     }
 }

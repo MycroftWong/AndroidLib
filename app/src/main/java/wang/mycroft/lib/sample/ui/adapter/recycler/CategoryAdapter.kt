@@ -1,5 +1,6 @@
 package wang.mycroft.lib.sample.ui.adapter.recycler
 
+import androidx.core.text.HtmlCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.donkingliang.labels.LabelsView
@@ -24,7 +25,9 @@ class CategoryAdapter(data: List<Category>) :
         helper.setText(R.id.titleText, item.name)
 
         val labelsView = helper.getView<LabelsView>(R.id.labelsView)
-        labelsView.setLabels(item.children) { _, _, data -> data.name }
+        labelsView.setLabels(item.children) { _, _, data ->
+            HtmlCompat.fromHtml(data.name, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        }
     }
 
 }

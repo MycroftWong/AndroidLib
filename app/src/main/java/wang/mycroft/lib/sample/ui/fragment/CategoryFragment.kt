@@ -19,6 +19,8 @@ import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
 
+private const val STATE_CATEGORY_LIST = "category_list.state"
+
 /**
  *
  * @blog: https://blog.mycroft.wang
@@ -29,13 +31,8 @@ class CategoryFragment : CommonFragment() {
 
     companion object {
 
-        private const val STATE_CATEGORY_LIST = "category_list.state"
-
         fun newInstance(): CategoryFragment {
-            val args = Bundle()
-            val fragment = CategoryFragment()
-            fragment.arguments = args
-            return fragment
+            return CategoryFragment()
         }
     }
 
@@ -56,18 +53,7 @@ class CategoryFragment : CommonFragment() {
             categoryList.addAll(categories)
         }
 
-        categoryRepository.categoryList.observe(
-            this,
-            Observer<ResultModel<List<Category>>> { resultModel ->
-                if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
-                    holder.showLoadFailed()
-                } else {
-                    holder.showLoadSuccess()
-                    categoryList.addAll(resultModel.data)
-                    adapter?.notifyDataSetChanged()
-                }
-                isLoading = false
-            })
+        categoryRepository.categoryList.observe(this, categoryListObserver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,22 +82,12 @@ class CategoryFragment : CommonFragment() {
         adapter = CategoryAdapter(categoryList)
 
         adapter!!.setOnItemClickListener { _, _, position ->
-            startActivity(
-                CategoryDetailActivity.getIntent(
-                    context!!, categoryList[position]
-                )
-            )
+            startActivity(CategoryDetailActivity.getIntent(context!!, categoryList[position]))
         }
 
-        recyclerView.run {
-            this.adapter = this@CategoryFragment.adapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    context!!,
-                    DividerItemDecoration.VERTICAL
-                )
-            )
-        }
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
+        )
         recyclerView.adapter = adapter
 
         if (categoryList.isEmpty()) {
@@ -142,6 +118,17 @@ class CategoryFragment : CommonFragment() {
         BaseQuickAdapterUtil.releaseAdapter(adapter)
         adapter = null
         super.onDestroyView()
+    }
+
+    private val categoryListObserver = Observer<ResultModel<List<Category>>> { resultModel ->
+        if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
+            holder.showLoadFailed()
+        } else {
+            holder.showLoadSuccess()
+            categoryList.addAll(resultModel.data)
+            adapter?.notifyDataSetChanged()
+        }
+        isLoading = false
     }
 
 }

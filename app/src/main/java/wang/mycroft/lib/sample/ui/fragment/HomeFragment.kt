@@ -1,9 +1,7 @@
 package wang.mycroft.lib.sample.ui.fragment
 
-import android.app.ActivityOptions
 import android.content.Context
 import android.os.Bundle
-import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.hjq.bar.OnTitleBarListener
@@ -38,6 +35,14 @@ import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
 
+private const val STATE_NEXT_PAGE = "next_page.state"
+
+private const val STATE_ARTICLE_LIST = "article_list.state"
+
+private const val STATE_BANNER_LIST = "banner_list.state"
+
+private const val START_PAGE = 0
+
 /**
  *
  * @blog: https://blog.mycroft.wang
@@ -47,14 +52,6 @@ import wang.mycroft.lib.view.LoadingHolder
 class HomeFragment : CommonFragment() {
 
     companion object {
-        private const val STATE_NEXT_PAGE = "next_page.state"
-
-        private const val STATE_ARTICLE_LIST = "article_list.state"
-
-        private const val STATE_BANNER_LIST = "banner_list.state"
-
-        private const val START_PAGE = 0
-
         fun newInstance(): HomeFragment {
             return HomeFragment()
         }
@@ -128,10 +125,10 @@ class HomeFragment : CommonFragment() {
 
         adapter!!.onItemClickListener = onItemClickListener
 
-        with(recyclerView) {
-            addItemDecoration(DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL))
-            this.adapter = this@HomeFragment.adapter
-        }
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
+        )
+        recyclerView.adapter = adapter
 
         if (bannerList.isNotEmpty()) {
             createBanner()
@@ -200,47 +197,42 @@ class HomeFragment : CommonFragment() {
         }
     }
 
-    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, view, position ->
-        val options = ActivityOptions.makeSceneTransitionAnimation(
-            activity!!,
-            Pair(view, StringUtils.getString(R.string.transition_content))
-        )
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
         startActivity(
             ArticleWebViewActivity.getIntent(
                 context!!,
                 articleTypeModels[position].article.title,
                 articleTypeModels[position].article.link
-            ), options.toBundle()
+            )
         )
     }
 
-    private val articleListObserver =
-        Observer<ResultModel<ListData<Article>>> { listDataResultModel ->
-            if (listDataResultModel.errorCode != ResultModel.CODE_SUCCESS) {
-                if (articleTypeModels.isEmpty()) {
-                    holder?.showLoadFailed()
-                } else {
-                    ToastUtils.showShort(listDataResultModel.errorMsg)
-                }
+    private val articleListObserver = Observer<ResultModel<ListData<Article>>> { resultModel ->
+        if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
+            if (articleTypeModels.isEmpty()) {
+                holder?.showLoadFailed()
             } else {
-                holder?.showLoadSuccess()
-
-                val listData = listDataResultModel.data
-
-                if (listData.curPage == START_PAGE) {
-                    articleTypeModels.clear()
-                }
-                nextPage = listData.curPage + 1
-
-                refreshLayout.setNoMoreData(listData.curPage >= listData.pageCount)
-
-                for (item in listData.datas) {
-                    articleTypeModels.add(ArticleTypeModel(item))
-                }
-                adapter?.notifyDataSetChanged()
+                ToastUtils.showShort(resultModel.errorMsg)
             }
-            finishRefresh()
+        } else {
+            holder?.showLoadSuccess()
+
+            val listData = resultModel.data
+
+            if (listData.curPage == START_PAGE) {
+                articleTypeModels.clear()
+            }
+            nextPage = listData.curPage + 1
+
+            refreshLayout.setNoMoreData(listData.curPage >= listData.pageCount)
+
+            for (item in listData.datas) {
+                articleTypeModels.add(ArticleTypeModel(item))
+            }
+            adapter?.notifyDataSetChanged()
         }
+        finishRefresh()
+    }
 
     private val bannerList = ArrayList<Banner>()
 
@@ -291,6 +283,13 @@ class HomeFragment : CommonFragment() {
             })
 
             setOnBannerListener {
+                startActivity(
+                    ArticleWebViewActivity.getIntent(
+                        context!!,
+                        bannerList[it].title,
+                        bannerList[it].url
+                    )
+                )
             }
 
             start()
