@@ -42,7 +42,7 @@ class ProjectFragment : CommonFragment() {
         projectRepository.projectList.observe(this, projectListObserver)
     }
 
-    private lateinit var holder: LoadingHolder
+    private var holder: LoadingHolder? = null
 
     private val projectList = mutableListOf<Project>()
 
@@ -56,11 +56,11 @@ class ProjectFragment : CommonFragment() {
         val view = inflater.inflate(R.layout.fragment_official_account, container, false)
 
         holder = Loading.getDefault().wrap(view).withRetry {
-            holder.showLoading()
+            holder?.showLoading()
             projectRepository.loadProjectList()
 
         }
-        return holder.wrapper
+        return holder!!.wrapper
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,9 +78,9 @@ class ProjectFragment : CommonFragment() {
         }
 
         if (projectList.isEmpty()) {
-            holder.showLoading()
+            holder?.showLoading()
         } else {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
         }
     }
 
@@ -93,11 +93,11 @@ class ProjectFragment : CommonFragment() {
 
     private val projectListObserver = Observer<ResultModel<List<Project>>> { resultModel ->
         if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
             projectList.addAll(resultModel.data)
             adapter?.notifyDataSetChanged()
         } else {
-            holder.showLoadFailed()
+            holder?.showLoadFailed()
         }
     }
 

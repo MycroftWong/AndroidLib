@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.LogUtils;
 
+import wang.mycroft.lib.BuildConfig;
+
 /**
  * @author wangqiang
  */
@@ -113,7 +115,7 @@ public final class LoadingHolder {
             curStatusView = view;
             statusViews.put(status, view);
         } catch (Exception e) {
-            if (Loading.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -160,11 +162,12 @@ public final class LoadingHolder {
      * @param <T> return type
      * @return data
      */
+    @SuppressWarnings("unchecked")
     public <T> T getData() {
         try {
             return (T) data;
         } catch (Exception e) {
-            if (Loading.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 LogUtils.i(e);
             }
         }

@@ -31,12 +31,7 @@ class ToolsFragment : CommonFragment() {
     companion object {
 
         fun newInstance(): ToolsFragment {
-
-            val args = Bundle()
-
-            val fragment = ToolsFragment()
-            fragment.arguments = args
-            return fragment
+            return ToolsFragment()
         }
     }
 

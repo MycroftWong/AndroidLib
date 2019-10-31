@@ -38,7 +38,7 @@ class OfficialAccountFragment : CommonFragment() {
         }
     }
 
-    private lateinit var holder: LoadingHolder
+    private var holder: LoadingHolder? = null
 
     private val officialAccountRepository: OfficialAccountRepository by lazy {
         ViewModelProvider(this)[OfficialAccountRepository::class.java]
@@ -62,10 +62,10 @@ class OfficialAccountFragment : CommonFragment() {
         val view = inflater.inflate(R.layout.fragment_official_account, container, false)
 
         holder = Loading.getDefault().wrap(view).withRetry {
-            holder.showLoading()
+            holder?.showLoading()
             officialAccountRepository.loadOfficialAccountList()
         }
-        return holder.wrapper
+        return holder!!.wrapper
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,9 +83,9 @@ class OfficialAccountFragment : CommonFragment() {
         }
 
         if (officialAccountList.isEmpty()) {
-            holder.showLoading()
+            holder?.showLoading()
         } else {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
         }
     }
 
@@ -99,11 +99,11 @@ class OfficialAccountFragment : CommonFragment() {
     private val officialAccountObserver =
         Observer<ResultModel<List<OfficialAccount>>> { resultModel ->
             if (resultModel.errorCode == ResultModel.CODE_SUCCESS) {
-                holder.showLoadSuccess()
+                holder?.showLoadSuccess()
                 officialAccountList.addAll(resultModel.data)
                 adapter?.notifyDataSetChanged()
             } else {
-                holder.showLoadFailed()
+                holder?.showLoadFailed()
             }
         }
 }

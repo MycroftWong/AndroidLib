@@ -38,7 +38,8 @@ class CategoryFragment : CommonFragment() {
 
     private val categoryList = ArrayList<Category>()
 
-    private lateinit var holder: LoadingHolder
+    private var holder: LoadingHolder? = null
+
     private var adapter: CategoryAdapter? = null
 
     private val categoryRepository: CategoryRepository by lazy {
@@ -47,7 +48,7 @@ class CategoryFragment : CommonFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_CATEGORY_LIST)) {
+        if (savedInstanceState?.containsKey(STATE_CATEGORY_LIST) == true) {
             val categories =
                 savedInstanceState.getParcelableArrayList<Category>(STATE_CATEGORY_LIST)!!
             categoryList.addAll(categories)
@@ -69,11 +70,11 @@ class CategoryFragment : CommonFragment() {
         val view = inflater.inflate(R.layout.fragment_category, container, false)
 
         holder = Loading.getDefault().wrap(view).withRetry {
-            holder.showLoading()
+            holder?.showLoading()
             loadData()
         }
 
-        return holder.wrapper
+        return holder!!.wrapper
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,9 +92,9 @@ class CategoryFragment : CommonFragment() {
         recyclerView.adapter = adapter
 
         if (categoryList.isEmpty()) {
-            holder.showLoading()
+            holder?.showLoading()
         } else {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
         }
     }
 
@@ -117,14 +118,15 @@ class CategoryFragment : CommonFragment() {
     override fun onDestroyView() {
         BaseQuickAdapterUtil.releaseAdapter(adapter)
         adapter = null
+        holder = null
         super.onDestroyView()
     }
 
     private val categoryListObserver = Observer<ResultModel<List<Category>>> { resultModel ->
         if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
-            holder.showLoadFailed()
+            holder?.showLoadFailed()
         } else {
-            holder.showLoadSuccess()
+            holder?.showLoadSuccess()
             categoryList.addAll(resultModel.data)
             adapter?.notifyDataSetChanged()
         }

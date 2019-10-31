@@ -1,16 +1,14 @@
 package wang.mycroft.lib.sample.ui.fragment
 
-import android.app.ActivityOptions
 import android.os.Bundle
-import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import kotlinx.android.synthetic.main.vertical_refresh_recycler.*
@@ -83,29 +81,12 @@ class SearchResultFragment : CommonFragment() {
 
         adapter = ArticleListAdapter(searchResultList)
 
-        adapter!!.setOnItemClickListener { _, itemView, position ->
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                activity!!,
-                Pair(itemView, StringUtils.getString(R.string.transition_content))
-            )
-            startActivity(
-                ArticleWebViewActivity.getIntent(
-                    context!!,
-                    searchResultList[position].article.title,
-                    searchResultList[position].article.link
-                ), options.toBundle()
-            )
-        }
+        adapter!!.onItemClickListener = onItemClickListener
 
-        recyclerView.run {
-            this.adapter = this@SearchResultFragment.adapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    context!!,
-                    DividerItemDecoration.VERTICAL
-                )
-            )
-        }
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
+        )
     }
 
     override fun onDestroyView() {
@@ -115,33 +96,29 @@ class SearchResultFragment : CommonFragment() {
         super.onDestroyView()
     }
 
-    private val searchObserver: Observer<String> by lazy {
-        Observer<String> { s ->
-            key = s
-            loadData(START_PAGE)
-        }
+    private val searchObserver = Observer<String> { s ->
+        key = s
+        loadData(START_PAGE)
     }
 
-    private val observer: Observer<ResultModel<ListData<Article>>> by lazy {
-        Observer<ResultModel<ListData<Article>>> { resultModel ->
-            finishRefresh()
-            if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
-                ToastUtils.showShort(resultModel.errorMsg)
-            } else {
-                val listData = resultModel.data
-                currentPage = requestingPage
+    private val observer = Observer<ResultModel<ListData<Article>>> { resultModel ->
+        finishRefresh()
+        if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
+            ToastUtils.showShort(resultModel.errorMsg)
+        } else {
+            val listData = resultModel.data
+            currentPage = requestingPage
 
-                if (requestingPage == START_PAGE) {
-                    searchResultList.clear()
-                    recyclerView.smoothScrollToPosition(0)
-                }
-
-                listData.datas.forEach {
-                    searchResultList.add(ArticleTypeModel(it))
-                }
-
-                adapter?.notifyDataSetChanged()
+            if (requestingPage == START_PAGE) {
+                searchResultList.clear()
+                recyclerView.smoothScrollToPosition(0)
             }
+
+            listData.datas.forEach {
+                searchResultList.add(ArticleTypeModel(it))
+            }
+
+            adapter?.notifyDataSetChanged()
         }
     }
 
@@ -185,5 +162,15 @@ class SearchResultFragment : CommonFragment() {
         override fun onRefresh(refreshLayout: RefreshLayout) {
             loadData(START_PAGE)
         }
+    }
+
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
+        startActivity(
+            ArticleWebViewActivity.getIntent(
+                context!!,
+                searchResultList[position].article.title,
+                searchResultList[position].article.link
+            )
+        )
     }
 }

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.hjq.bar.OnTitleBarListener
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.loader.ImageLoader
@@ -31,6 +30,7 @@ import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 import wang.mycroft.lib.sample.ui.activity.SearchActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
+import wang.mycroft.lib.sample.ui.view.OnTitleBarAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
@@ -111,12 +111,12 @@ class HomeFragment : CommonFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        titleBar.setOnTitleBarListener(object : OnTitleBarListener {
-            override fun onLeftClick(v: View) {}
+        titleBar.setOnTitleBarListener(object : OnTitleBarAdapter() {
+            override fun onTitleClick(v: View?) {
+                recyclerView.smoothScrollToPosition(0)
+            }
 
-            override fun onTitleClick(v: View) {}
-
-            override fun onRightClick(v: View) {
+            override fun onRightClick(v: View?) {
                 startActivity(SearchActivity.getIntent(context!!))
             }
         })
