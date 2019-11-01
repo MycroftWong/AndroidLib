@@ -88,7 +88,7 @@ dependencies {
     implementation "androidx.room:room-ktx:${versions.room}"
     kapt "androidx.room:room-compiler:${versions.room}"
 
-    implementation 'com.github.donkingliang:LabelsView:1.5.0'
+    implementation 'com.github.donkingliang:LabelsView:1.6.1'
 
     implementation 'com.hjq:titlebar:6.0'
 
