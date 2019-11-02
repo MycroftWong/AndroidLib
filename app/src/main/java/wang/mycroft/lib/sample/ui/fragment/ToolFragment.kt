@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_tool.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonFragment
 import wang.mycroft.lib.sample.ui.adapter.pager.ToolAdapter
+import wang.mycroft.lib.sample.ui.view.OnTabSelectedAdapter
 
 /**
  * 体系
@@ -36,5 +38,10 @@ class ToolFragment : CommonFragment() {
 
         viewPager.adapter = ToolAdapter(childFragmentManager)
         tabLayout.setupWithViewPager(viewPager)
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedAdapter() {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager.setCurrentItem(tab.position, false)
+            }
+        })
     }
 }

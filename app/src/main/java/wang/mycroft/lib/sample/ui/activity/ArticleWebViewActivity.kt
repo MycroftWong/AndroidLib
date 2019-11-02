@@ -114,7 +114,6 @@ class ArticleWebViewActivity : CommonActivity() {
 
     private val webChromeClient = object : WebChromeClient() {
         override fun onProgressChanged(webView: WebView?, percent: Int) {
-            LogUtils.e(percent)
             progressBar.progress = percent
             if (percent >= 100) {
                 progressBar.visibility = View.GONE

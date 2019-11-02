@@ -31,10 +31,7 @@ class OfficialAccountFragment : CommonFragment() {
     companion object {
 
         fun newInstance(): OfficialAccountFragment {
-            val args = Bundle()
-            val fragment = OfficialAccountFragment()
-            fragment.arguments = args
-            return fragment
+            return OfficialAccountFragment()
         }
     }
 

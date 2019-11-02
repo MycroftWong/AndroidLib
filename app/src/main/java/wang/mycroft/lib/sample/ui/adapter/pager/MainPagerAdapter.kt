@@ -27,8 +27,8 @@ class MainPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(
         return when (position) {
             0 -> HomeFragment.newInstance()
             1 -> ToolFragment.newInstance()
-            2 -> OfficialAccountFragment.newInstance()
-            3 -> ProjectFragment.newInstance()
+            2 -> ProjectFragment.newInstance()
+            3 -> OfficialAccountFragment.newInstance()
             else -> HomeFragment.newInstance()
         }
     }

@@ -15,14 +15,14 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/navigation_official"
-        android:icon="@drawable/official_account"
-        android:title="@string/official_account"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/navigation_project"
         android:icon="@drawable/project"
         android:title="@string/project"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/navigation_official_account"
+        android:icon="@drawable/square"
+        android:title="@string/official_account"
+        app:showAsAction="ifRoom" />
+
 </menu>

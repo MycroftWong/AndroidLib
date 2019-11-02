@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.blankj.utilcode.util.StringUtils
 import wang.mycroft.lib.sample.R
+import wang.mycroft.lib.sample.ui.fragment.ArticleListFragment
 import wang.mycroft.lib.sample.ui.fragment.CategoryFragment
 import wang.mycroft.lib.sample.ui.fragment.ToolsFragment
 
@@ -17,15 +18,15 @@ import wang.mycroft.lib.sample.ui.fragment.ToolsFragment
 class ToolAdapter(fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
-        return if (0 == position) {
-            CategoryFragment.newInstance()
-        } else {
-            ToolsFragment.newInstance()
+        return when (position) {
+            0 -> CategoryFragment.newInstance()
+            1 -> ToolsFragment.newInstance()
+            else -> ArticleListFragment.newInstance("user_article/list/%d/json", 0)
         }
     }
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

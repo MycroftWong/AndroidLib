@@ -50,8 +50,8 @@ class MainActivity : CommonActivity() {
                 navView.selectedItemId = when (position) {
                     0 -> R.id.navigation_home
                     1 -> R.id.navigation_tool
-                    2 -> R.id.navigation_official
-                    3 -> R.id.navigation_project
+                    2 -> R.id.navigation_project
+                    3 -> R.id.navigation_official_account
                     else -> R.id.navigation_home
                 }
             }
@@ -61,8 +61,8 @@ class MainActivity : CommonActivity() {
             val position: Int = when (it.itemId) {
                 R.id.navigation_home -> 0
                 R.id.navigation_tool -> 1
-                R.id.navigation_official -> 2
-                R.id.navigation_project -> 3
+                R.id.navigation_project -> 2
+                R.id.navigation_official_account -> 3
                 else -> 0
             }
             viewPager.setCurrentItem(position, false)
