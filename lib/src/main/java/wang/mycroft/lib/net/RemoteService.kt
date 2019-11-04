@@ -46,7 +46,7 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
             httpClient = OkHttpClient.Builder()
-                .cache(Cache(File(Utils.getApp().getCacheDir(), "net"), 10L shl 20))
+                .cache(Cache(File(Utils.getApp().cacheDir, "net"), 10L shl 20))
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -66,16 +66,15 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
         if (retrofitMap.containsKey(baseUrl)) {
             return
         }
-        val retrofit: Retrofit
-        if (maker == null) {
-            retrofit = Retrofit.Builder()
+        val retrofit = if (maker == null) {
+            Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(httpClient)
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         } else {
-            retrofit = maker.makeRetrofit(baseUrl)
+            maker.makeRetrofit(baseUrl)
         }
         retrofitMap[baseUrl] = retrofit
     }
