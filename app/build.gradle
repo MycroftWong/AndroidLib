@@ -105,6 +105,10 @@ dependencies {
     implementation "org.permissionsdispatcher:permissionsdispatcher:${versions.permissionsdispatcher}"
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:${versions.permissionsdispatcher}"
 
+    debugImplementation ('com.didichuxing.doraemonkit:doraemonkit:2.0.0') {
+        exclude(group: 'com.blankj', module: 'utilcode')
+    }
+    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:2.0.0'
 }
 
 andResGuard {
