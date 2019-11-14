@@ -23,6 +23,5 @@ public class GlideModuleImpl extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
         registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(RemoteService.Companion.getImpl().getHttpClient()));
-
     }
 }
