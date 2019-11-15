@@ -16,11 +16,6 @@ import wang.mycroft.lib.net.cookiejar.cache.SetCookieCache
 import wang.mycroft.lib.net.cookiejar.persistence.SharedPrefsCookiePersistor
 import wang.mycroft.lib.sample.model.*
 import wang.mycroft.lib.sample.service.FileServiceImpl
-import java.io.IOException
-import java.net.Proxy
-import java.net.ProxySelector
-import java.net.SocketAddress
-import java.net.URI
 import java.util.*
 import java.util.concurrent.TimeUnit
 

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import wang.mycroft.lib.R
-import wang.mycroft.lib.base.LoadingDialogHelper.DialogCreator
 
 /**
  * 1. 添加了LoadingDialog
@@ -22,7 +21,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getResId())
         loadingDialogHelper =
-            LoadingDialogHelper(this, DialogCreator { createLoadingDialog() })
+            LoadingDialogHelper(this, DialogCreator { this@BaseActivity.createLoadingDialog() })
         initViews()
         loadData()
     }
@@ -79,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
      *
      * @return 通用的加载Dialog
      */
-    protected fun createLoadingDialog(): Dialog {
+    protected open fun createLoadingDialog(): Dialog {
         val dialog = Dialog(this, R.style.LoadingDialog)
         dialog.setContentView(R.layout.common_dialog)
         return dialog

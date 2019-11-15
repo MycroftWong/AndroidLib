@@ -58,13 +58,4 @@ class LoadingDialogHelper(
             loadingDialog = null
         }
     }
-
-    interface DialogCreator {
-        /**
-         * create loading dialog
-         *
-         * @return dialog
-         */
-        fun createLoadingDialog(): Dialog
-    }
 }

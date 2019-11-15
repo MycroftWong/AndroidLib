@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import wang.mycroft.lib.R
-import wang.mycroft.lib.base.LoadingDialogHelper.DialogCreator
 
 /**
  * 添加了 LoadingDialog的 Fragment
@@ -19,21 +18,13 @@ abstract class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loadingDialogHelper =
-            LoadingDialogHelper(this, object : DialogCreator {
-                override fun createLoadingDialog(): Dialog {
-                    return this@BaseFragment.createLoadingDialog()
-                }
-            })
-
-        view!!.setOnClickListener {
-            showLoadingDialog()
-        }
+            LoadingDialogHelper(this, DialogCreator { this@BaseFragment.createLoadingDialog() })
     }
 
     /**
      * 显示通用的加载[Dialog], 默认cancelable=false
      */
-    fun showLoadingDialog() {
+    protected fun showLoadingDialog() {
         loadingDialogHelper?.showLoadingDialog()
     }
 
@@ -42,7 +33,7 @@ abstract class BaseFragment : Fragment() {
      *
      * @param cancelable 是否允许点击空白处取消
      */
-    fun showLoadingDialog(cancelable: Boolean) {
+    protected fun showLoadingDialog(cancelable: Boolean) {
         loadingDialogHelper?.showLoadingDialog(cancelable)
     }
 
@@ -51,7 +42,7 @@ abstract class BaseFragment : Fragment() {
      *
      * @return 通用的加载Dialog
      */
-    open fun createLoadingDialog(): Dialog {
+    protected open fun createLoadingDialog(): Dialog {
         val dialog = Dialog(context!!, R.style.LoadingDialog)
         dialog.setContentView(R.layout.common_dialog)
         return dialog
@@ -60,7 +51,7 @@ abstract class BaseFragment : Fragment() {
     /**
      * 隐藏加载Dialog
      */
-    fun hideLoadingDialog() {
+    protected fun hideLoadingDialog() {
         loadingDialogHelper?.hideLoadingDialog()
     }
 }

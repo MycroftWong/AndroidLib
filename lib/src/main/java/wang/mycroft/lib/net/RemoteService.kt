@@ -10,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+
 /**
  * 简化{@link Retrofit}的构造工作
  *
@@ -22,7 +23,7 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
     companion object {
         private var remoteService: RemoteService? = null
 
-        fun init(maker: OkHttpClientMaker?): RemoteService {
+        fun init(maker: OkHttpClientMaker): RemoteService {
             if (remoteService == null) {
                 remoteService = RemoteService(maker)
             }
