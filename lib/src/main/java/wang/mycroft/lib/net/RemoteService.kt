@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * 简化{@link Retrofit}的构造工作
  *
  * @blog: https://blog.mycroft.wang
- * @date: 2019年09月13
+ * @date: 2019年09月13日
  * @author: wangqiang
  */
 class RemoteService private constructor(maker: OkHttpClientMaker?) {
@@ -66,16 +66,12 @@ class RemoteService private constructor(maker: OkHttpClientMaker?) {
         if (retrofitMap.containsKey(baseUrl)) {
             return
         }
-        val retrofit = if (maker == null) {
-            Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(httpClient)
-                .addConverterFactory(StringConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        } else {
-            maker.makeRetrofit(baseUrl)
-        }
+        val retrofit = maker?.makeRetrofit(baseUrl) ?: Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(httpClient)
+            .addConverterFactory(StringConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
         retrofitMap[baseUrl] = retrofit
     }
 
