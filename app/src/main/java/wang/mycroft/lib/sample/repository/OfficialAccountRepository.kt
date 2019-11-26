@@ -31,9 +31,4 @@ class OfficialAccountRepository : ViewModel() {
             }
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }

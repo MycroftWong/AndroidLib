@@ -29,28 +29,28 @@ object NetService {
 
         val fileService = FileServiceImpl
 
-        val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                LogUtils.w(message)
-            }
-        })
-
-
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
         val cookieJar = PersistentCookieJar(
             SetCookieCache(),
             SharedPrefsCookiePersistor(Utils.getApp())
         )
 
         val httpClient = OkHttpClient.Builder()
-            .cookieJar(cookieJar)
-            .cache(Cache(fileService.netCacheDir, (10 shl 20).toLong()))
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            //                .addNetworkInterceptor(CacheInterceptor.INSTANCE)
-            .addNetworkInterceptor(loggingInterceptor)
+            .apply {
+                cookieJar(cookieJar)
+                cache(Cache(fileService.netCacheDir, (10 shl 20).toLong()))
+                readTimeout(10, TimeUnit.SECONDS)
+                writeTimeout(15, TimeUnit.SECONDS)
+                connectTimeout(10, TimeUnit.SECONDS)
+                val loggingInterceptor =
+                    HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+                        override fun log(message: String) {
+                            LogUtils.w(message)
+                        }
+                    })
+
+                loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+                addNetworkInterceptor(loggingInterceptor)
+            }
             .build()
 
         RemoteService.init(OkHttpClientMaker { httpClient })

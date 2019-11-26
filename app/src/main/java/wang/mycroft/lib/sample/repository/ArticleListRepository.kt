@@ -39,9 +39,4 @@ class ArticleListRepository : ViewModel() {
             }
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }

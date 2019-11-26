@@ -44,9 +44,4 @@ class HistorySearchRepository : ViewModel() {
             }
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }

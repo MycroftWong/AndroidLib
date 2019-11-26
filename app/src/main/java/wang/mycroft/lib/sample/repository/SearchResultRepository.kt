@@ -2,7 +2,6 @@ package wang.mycroft.lib.sample.repository
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Article
@@ -39,10 +38,5 @@ class SearchResultRepository : ViewModel() {
             }
 
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
     }
 }

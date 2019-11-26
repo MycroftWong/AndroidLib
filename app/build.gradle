@@ -77,7 +77,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
     implementation project(path: ':lib')
-//    implementation 'com.github.MycroftWong:AndroidLib:v1.0.7'
+//    implementation 'com.github.MycroftWong:AndroidLib:v1.0.8'
 
     implementation "androidx.navigation:navigation-fragment:${versions.navigation}"
     implementation "androidx.navigation:navigation-ui:${versions.navigation}"

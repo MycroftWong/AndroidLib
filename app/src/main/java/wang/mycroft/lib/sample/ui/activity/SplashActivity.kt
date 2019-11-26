@@ -3,17 +3,17 @@ package wang.mycroft.lib.sample.ui.activity
 import android.Manifest
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import permissions.dispatcher.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
 import wang.mycroft.lib.sample.component.WebService
 import java.util.concurrent.TimeUnit
-
-private const val TIME_SPLASH = 3000
 
 /**
  *
@@ -22,7 +22,11 @@ private const val TIME_SPLASH = 3000
  * @author: wangqiang
  */
 @RuntimePermissions
-class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
+class SplashActivity : CommonActivity() {
+
+    companion object {
+        private const val TIME_SPLASH = 3000
+    }
 
     override fun getResId(): Int {
         return R.layout.activity_splash
@@ -34,7 +38,7 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
     }
 
     override fun loadData() {
-        launch {
+        lifecycleScope.launchWhenCreated {
             val startTime = System.currentTimeMillis()
             withContext(Dispatchers.IO) {
 
@@ -53,12 +57,6 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
 
             goMainPageWithPermissionCheck()
         }
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
     }
 
     @NeedsPermission(
@@ -99,9 +97,7 @@ class SplashActivity : CommonActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)

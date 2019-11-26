@@ -38,9 +38,4 @@ class CategoryRepository : ViewModel() {
             }
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }
