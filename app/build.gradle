@@ -63,6 +63,10 @@ android {
         sourceCompatibility versions.jdk
         targetCompatibility versions.jdk
     }
+
+    kotlinOptions {
+        jvmTarget = 1.8
+    }
 }
 
 dependencies {
@@ -105,10 +109,9 @@ dependencies {
     implementation "org.permissionsdispatcher:permissionsdispatcher:${versions.permissionsdispatcher}"
     kapt "org.permissionsdispatcher:permissionsdispatcher-processor:${versions.permissionsdispatcher}"
 
-    debugImplementation ('com.didichuxing.doraemonkit:doraemonkit:2.0.0') {
-        exclude(group: 'com.blankj', module: 'utilcode')
-    }
-    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:2.0.0'
+    implementation "com.google.dagger:dagger:2.25.2"
+    implementation "com.google.dagger:dagger-android:2.25.2"
+    kapt "com.google.dagger:dagger-compiler:2.25.2"
 }
 
 andResGuard {

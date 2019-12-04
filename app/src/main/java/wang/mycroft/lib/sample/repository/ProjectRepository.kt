@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import wang.mycroft.lib.sample.model.Project
 import wang.mycroft.lib.sample.net.NetModel
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.net.WebService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
@@ -18,7 +18,7 @@ class ProjectRepository : ViewModel() {
     fun loadProjectList() {
         viewModelScope.launch {
             try {
-                projectListLiveData.value = NetService.getProjectList()
+                projectListLiveData.value = WebService.getProjectList()
             } catch (e: Exception) {
                 projectListLiveData.value = NetModel.error(e)
             }

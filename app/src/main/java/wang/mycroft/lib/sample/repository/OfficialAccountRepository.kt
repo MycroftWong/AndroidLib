@@ -2,12 +2,11 @@ package wang.mycroft.lib.sample.repository
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.OfficialAccount
 import wang.mycroft.lib.sample.net.NetModel
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.net.WebService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
@@ -24,7 +23,7 @@ class OfficialAccountRepository : ViewModel() {
         viewModelScope.launch {
             try {
                 officialAccountListLiveData.value = withContext(Dispatchers.IO) {
-                    NetService.getOfficialAccountList()
+                    WebService.getOfficialAccountList()
                 }
             } catch (e: Exception) {
                 officialAccountListLiveData.value = NetModel.error(e)

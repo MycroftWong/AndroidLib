@@ -19,7 +19,11 @@ import wang.mycroft.lib.sample.service.FileServiceImpl
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-object NetService {
+/**
+ * 网络请求类
+ * 统一管理网络请求
+ */
+object WebService {
 
     private const val BASE_URL = "https://www.wanandroid.com/"
 

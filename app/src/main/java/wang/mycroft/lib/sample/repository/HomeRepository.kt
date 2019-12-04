@@ -2,14 +2,13 @@ package wang.mycroft.lib.sample.repository
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Article
 import wang.mycroft.lib.sample.model.Banner
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.net.NetModel
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.net.WebService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
@@ -33,7 +32,7 @@ class HomeRepository : ViewModel() {
         viewModelScope.launch {
             try {
                 articleListNetLiveData.value = withContext(Dispatchers.IO) {
-                    NetService.getHomeArticleList(page)
+                    WebService.getHomeArticleList(page)
                 }
             } catch (e: Exception) {
                 articleListNetLiveData.value = NetModel.error(e)
@@ -52,7 +51,7 @@ class HomeRepository : ViewModel() {
         viewModelScope.launch {
             try {
                 bannerListNetLiveData.value = withContext(Dispatchers.IO) {
-                    NetService.getHomeBannerList()
+                    WebService.getHomeBannerList()
                 }
             } catch (e: Exception) {
                 bannerListNetLiveData.value = NetModel.error(e)
@@ -70,7 +69,7 @@ class HomeRepository : ViewModel() {
     fun loadTopArticleList() {
         viewModelScope.launch {
             try {
-                topArticleListNetLiveData.value = NetService.getTopArticleList()
+                topArticleListNetLiveData.value = WebService.getTopArticleList()
             } catch (e: Exception) {
                 topArticleListNetLiveData.value = NetModel.error(e)
             }

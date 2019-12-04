@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Tools
 import wang.mycroft.lib.sample.net.NetModel
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.net.WebService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
@@ -22,7 +22,7 @@ class ToolsRepository : ViewModel() {
         viewModelScope.launch {
             try {
                 toolsListLiveData.value = withContext(Dispatchers.IO) {
-                    NetService.getToolList()
+                    WebService.getToolList()
                 }
             } catch (e: Exception) {
                 toolsListLiveData.value = NetModel.error(e)

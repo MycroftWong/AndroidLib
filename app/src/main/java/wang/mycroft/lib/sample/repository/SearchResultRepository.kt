@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import wang.mycroft.lib.sample.model.Article
 import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.net.NetModel
-import wang.mycroft.lib.sample.net.NetService
+import wang.mycroft.lib.sample.net.WebService
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.repository.model.SimpleResultModel
 
@@ -31,7 +31,7 @@ class SearchResultRepository : ViewModel() {
         viewModelScope.launch {
             try {
                 articleListLiveData.value = withContext(Dispatchers.IO) {
-                    NetService.search(key, page)
+                    WebService.search(key, page)
                 }
             } catch (e: Exception) {
                 articleListLiveData.value = NetModel.error(e)

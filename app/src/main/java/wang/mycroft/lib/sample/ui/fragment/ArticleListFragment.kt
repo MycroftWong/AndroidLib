@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.blankj.utilcode.util.ToastUtils
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -23,11 +23,6 @@ import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import java.util.*
 
-private const val ARGS_ARTICLE = "article.args"
-private const val ARGS_START_PAGE = "start_page.args"
-
-private const val SAVED_ARTICLES = "articleList.saved"
-
 /**
  *
  * @blog: https://blog.mycroft.wang
@@ -37,6 +32,10 @@ private const val SAVED_ARTICLES = "articleList.saved"
 class ArticleListFragment : CommonFragment() {
 
     companion object {
+
+        private const val ARGS_ARTICLE = "article.args"
+
+        private const val ARGS_START_PAGE = "start_page.args"
 
         fun newInstance(url: String, startPage: Int): ArticleListFragment {
             return ArticleListFragment().apply {
@@ -48,40 +47,19 @@ class ArticleListFragment : CommonFragment() {
         }
     }
 
-    private var articleUrl: String? = null
     private var startPage: Int = 0
 
-    private val articleListRepository: ArticleListRepository by lazy {
-        ViewModelProvider(this)[ArticleListRepository::class.java]
-    }
+    private val articleListRepository: ArticleListRepository by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (null == savedInstanceState) {
-            articleUrl = arguments!!.getString(ARGS_ARTICLE)
-            startPage = arguments!!.getInt(ARGS_START_PAGE)
-        } else {
-            articleUrl = savedInstanceState.getString(ARGS_ARTICLE)
-            startPage = savedInstanceState.getInt(ARGS_START_PAGE)
-            val articles =
-                savedInstanceState.getParcelableArrayList<ArticleTypeModel>(SAVED_ARTICLES)
-            if (null != articles && articles.isNotEmpty()) {
-                articleTypeModels.addAll(articles)
-            }
-        }
+        articleListRepository.articleUrl = arguments!!.getString(ARGS_ARTICLE)!!
+        startPage = arguments!!.getInt(ARGS_START_PAGE)
 
         nextPage = startPage
 
-        articleListRepository.articleUrl = articleUrl
         articleListRepository.articleList.observe(this, observer)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(ARGS_ARTICLE, articleUrl)
-        outState.putInt(ARGS_START_PAGE, startPage)
-        outState.putParcelableArrayList(SAVED_ARTICLES, articleTypeModels)
     }
 
     private val articleTypeModels = ArrayList<ArticleTypeModel>()
