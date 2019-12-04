@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.youth.banner.Banner xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bannerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    app:delay_time="3000"
+    app:image_scale_type="center_crop"
+    app:is_auto_play="true"
+    app:layout_constraintDimensionRatio="w,5:9"
+    app:scroll_time="@android:integer/config_mediumAnimTime" />
+

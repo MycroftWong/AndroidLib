@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_title_bar"
+        app:backButton="false"
+        app:lineColor="@color/common_text_color_detail"
+        app:lineSize="1px"
+        app:lineVisible="true"
+        app:rightIcon="@drawable/search"
+        app:title="@string/main_page" />
+
+    <include layout="@layout/vertical_refresh_recycler" />
+</LinearLayout>

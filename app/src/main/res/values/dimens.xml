@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_title_bar">48dp</dimen>
+    <dimen name="height_navigation">48dp</dimen>
+
+    <dimen name="height_tab_layout">44dp</dimen>
+
+    <dimen name="common_padding_top_bottom">8dp</dimen>
+    <dimen name="common_padding_start_end">12dp</dimen>
+    <dimen name="height_common_text">48dp</dimen>
+
+    <dimen name="common_text_size">14sp</dimen>
+    <dimen name="text_size_article_content">16sp</dimen>
+    <dimen name="common_text_size_info">12sp</dimen>
+
+    <dimen name="common_text_size_label">16sp</dimen>
+    <dimen name="slide_image">80dp</dimen>
+    <dimen name="height_item_history_key">48dp</dimen>
+
+    <dimen name="slide_loading_dialog">72dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="padding_symmetric_horizontal">16dp</dimen>
+    <dimen name="padding_symmetric_vertical">10dp</dimen>
+
+</resources>

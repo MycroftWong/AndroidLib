@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_refresh_view">56dp</dimen>
+
+    <dimen name="padding_symmetric_horizontal">16dp</dimen>
+    <dimen name="padding_symmetric_vertical">10dp</dimen>
+</resources>

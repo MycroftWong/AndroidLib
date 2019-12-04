@@ -1,0 +1,95 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.MycroftWong'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+    buildToolsVersion = versions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 109
+        versionName "v1.0.9"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.jdk
+        targetCompatibility versions.jdk
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
+
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinx_coroutines}"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlinx_coroutines}"
+
+    kapt "androidx.annotation:annotation:${versions.annotation}"
+
+    api "androidx.appcompat:appcompat:${versions.appcompat}"
+    api "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
+
+    api "androidx.activity:activity:${versions.activity}"
+    api "androidx.activity:activity-ktx:${versions.activity}"
+    api "androidx.fragment:fragment:${versions.fragment}"
+    api "androidx.fragment:fragment-ktx:${versions.fragment}"
+
+    api "com.google.android.material:material:${versions.material}"
+    api "androidx.recyclerview:recyclerview:${versions.recyclerview}"
+
+    api "androidx.lifecycle:lifecycle-common:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata-core:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}"
+
+    api "androidx.lifecycle:lifecycle-runtime:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-service:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
+
+    api "com.blankj:utilcodex:${versions.androidutilcodex}"
+
+    api "com.google.code.gson:gson:${versions.gson}"
+    api "com.squareup.okio:okio:${versions.okio}"
+    api "com.squareup.okhttp3:okhttp:${versions.okhttp}"
+    api "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}"
+
+    api "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    api "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+
+    api "com.github.bumptech.glide:glide:${versions.glide}"
+    kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+//    api 'com.github.bumptech.glide:okhttp3-integration:${versions.glide}'
+
+    api "com.github.CymChad:BaseRecyclerViewAdapterHelper:${versions.BRAV}"
+    api  "com.scwang.smart:refresh-layout-kernel:${versions.SmartRefreshLayout}"
+
+    // immersion bar
+    api "com.gyf.immersionbar:immersionbar:${versions.immersionbar}"
+    api "com.gyf.immersionbar:immersionbar-ktx:${versions.immersionbar}"
+
+//    api 'com.github.cxyzy1:clearEditText:1.0.5'
+
+    // pretty time
+    api "org.ocpsoft.prettytime:prettytime:${versions.prettytime}"
+
+    api "me.dkzwm.widget.fet:core:${versions.fet}"
+}
