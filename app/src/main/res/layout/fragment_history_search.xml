@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/hotKeyContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="hotKeyLabel,labelsView" />
+
+    <TextView
+        android:id="@+id/hotKeyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_padding_start_end"
+        android:text="@string/label_hot_key"
+        android:textSize="@dimen/common_text_size_label"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.donkingliang.labels.LabelsView
+        android:id="@+id/labelsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/hotKeyLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/common_padding_start_end"
-            android:text="@string/label_hot_key"
-            android:textSize="@dimen/common_text_size_label"
-            android:visibility="visible" />
-
-        <com.donkingliang.labels.LabelsView
-            android:id="@+id/labelsView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_padding_start_end"
-            android:layout_marginEnd="@dimen/common_padding_start_end"
-            app:labelTextColor="@color/common_text_color_detail"
-            app:labelTextSize="@dimen/common_text_size_label"
-            app:lineMargin="@dimen/padding_symmetric_vertical"
-            app:wordMargin="@dimen/padding_symmetric_horizontal"
-            tools:layout_height="100dp" />
-
-    </LinearLayout>
+        android:layout_marginStart="@dimen/common_padding_start_end"
+        android:layout_marginEnd="@dimen/common_padding_start_end"
+        app:labelTextColor="@color/common_text_color_detail"
+        app:labelTextSize="@dimen/common_text_size_label"
+        app:layout_constraintTop_toBottomOf="@id/hotKeyLabel"
+        app:lineMargin="@dimen/padding_symmetric_vertical"
+        app:wordMargin="@dimen/padding_symmetric_horizontal"
+        tools:layout_height="100dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/labelsView"
+        tools:listitem="@layout/item_history_key" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -74,6 +75,7 @@ class HistorySearchFragment : CommonFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         adapter = HistorySearchAdapter(historySearchKey)
 
         adapter?.run {
@@ -88,20 +90,21 @@ class HistorySearchFragment : CommonFragment() {
             }
         }
 
-        recyclerView.run {
+        with(recyclerView) {
             this.adapter = this@HistorySearchFragment.adapter
             val itemDecoration = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
             itemDecoration.setDrawable(ContextCompat.getDrawable(context!!, R.drawable.line)!!)
             addItemDecoration(itemDecoration)
         }
 
-        labelsView.run {
+        with(labelsView) {
             selectType = LabelsView.SelectType.NONE
             setOnLabelClickListener { _, _, position ->
                 searchViewModel.setSearchKey(
                     hotKeyList[position].name
                 )
             }
+            labelsView.setLabels(hotKeyList) { _, _, data -> data.name }
         }
     }
 
@@ -113,26 +116,22 @@ class HistorySearchFragment : CommonFragment() {
         }
     }
 
-    private val hotKeyObserver: Observer<ResultModel<List<HotKey>>> by lazy {
-        Observer<ResultModel<List<HotKey>>> { resultModel ->
-            if (resultModel.data.isNullOrEmpty()) {
-                hotKeyContainer.visibility = View.GONE
-            } else {
-                hotKeyList.clear()
-                hotKeyList.addAll(resultModel.data)
-                hotKeyContainer.visibility = View.VISIBLE
-                labelsView.setLabels(hotKeyList) { _, _, data -> data.name }
-            }
+    private val hotKeyObserver = Observer<ResultModel<List<HotKey>>> { resultModel ->
+        if (resultModel.data.isNullOrEmpty()) {
+            hotKeyContainer.visibility = View.GONE
+        } else {
+            hotKeyList.clear()
+            hotKeyList.addAll(resultModel.data)
+            hotKeyContainer.visibility = View.VISIBLE
+            labelsView.setLabels(hotKeyList) { _, _, data -> data.name }
         }
     }
 
-    private val historySearchListObserver: Observer<List<HistoryKey>> by lazy {
-        Observer<List<HistoryKey>> {
-            if (it.isNotEmpty()) {
-                historySearchKey.clear()
-                historySearchKey.addAll(it)
-                adapter?.notifyDataSetChanged()
-            }
+    private val historySearchListObserver = Observer<List<HistoryKey>> {
+        if (it.isNotEmpty()) {
+            historySearchKey.clear()
+            historySearchKey.addAll(it)
+            adapter?.notifyDataSetChanged()
         }
     }
 

@@ -3,7 +3,6 @@ package wang.mycroft.lib.sample.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_category_detail.*
 import wang.mycroft.lib.sample.R
@@ -11,7 +10,6 @@ import wang.mycroft.lib.sample.common.CommonActivity
 import wang.mycroft.lib.sample.model.Category
 import wang.mycroft.lib.sample.ui.adapter.pager.CategoryDetailPagerAdapter
 import wang.mycroft.lib.sample.ui.view.OnTabSelectedAdapter
-import wang.mycroft.lib.sample.ui.view.OnTitleBarAdapter
 
 /**
  *
@@ -52,15 +50,9 @@ class CategoryDetailActivity : CommonActivity() {
     }
 
     override fun initViews() {
-
-        titleBar.run {
-            this.title = category.name
-            setOnTitleBarListener(object : OnTitleBarAdapter() {
-                override fun onLeftClick(v: View?) {
-                    finish()
-                }
-            })
-        }
+        setSupportActionBar(toolBar)
+        supportActionBar?.title = category.name
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewPager.adapter = CategoryDetailPagerAdapter(supportFragmentManager, category)
 
@@ -75,7 +67,6 @@ class CategoryDetailActivity : CommonActivity() {
     }
 
     override fun loadData() {
-
     }
 
 }

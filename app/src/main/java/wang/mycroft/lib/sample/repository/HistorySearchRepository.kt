@@ -23,9 +23,8 @@ class HistorySearchRepository : ViewModel() {
 
     private val hotKeyListLiveData = MutableLiveData<NetModel<List<HotKey>>>()
 
-    val hotKeyList: LiveData<ResultModel<List<HotKey>>> = Transformations.map(hotKeyListLiveData) {
-        SimpleResultModel(it)
-    }
+    val hotKeyList: LiveData<ResultModel<List<HotKey>>> =
+        Transformations.map(hotKeyListLiveData) { SimpleResultModel(it) }
 
     private val historyKeyService: IHistoryKeyService = HistoryKeyServiceImpl
 

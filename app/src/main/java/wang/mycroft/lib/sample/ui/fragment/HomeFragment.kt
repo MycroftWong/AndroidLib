@@ -2,10 +2,9 @@ package wang.mycroft.lib.sample.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -30,7 +29,6 @@ import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
 import wang.mycroft.lib.sample.ui.activity.SearchActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
-import wang.mycroft.lib.sample.ui.view.OnTitleBarAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
@@ -65,6 +63,9 @@ class HomeFragment : CommonFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
+
         savedInstanceState?.let {
             nextPage = it.getInt(STATE_NEXT_PAGE)
             it.getParcelableArrayList<ArticleTypeModel>(STATE_ARTICLE_LIST)
@@ -96,9 +97,7 @@ class HomeFragment : CommonFragment() {
     private var holder: LoadingHolder? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         holder = Loading.getDefault().wrap(view).withRetry {
@@ -111,15 +110,8 @@ class HomeFragment : CommonFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        titleBar.setOnTitleBarListener(object : OnTitleBarAdapter() {
-            override fun onTitleClick(v: View?) {
-                recyclerView.smoothScrollToPosition(0)
-            }
-
-            override fun onRightClick(v: View?) {
-                startActivity(SearchActivity.getIntent(context!!))
-            }
-        })
+        (activity as AppCompatActivity).setSupportActionBar(toolBar)
+        toolBar.setTitle(R.string.main_page)
 
         adapter = ArticleListAdapter(articleTypeModels)
 
@@ -141,6 +133,20 @@ class HomeFragment : CommonFragment() {
         } else {
             holder?.showLoadSuccess()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
+        inflater.inflate(R.menu.menu_fragment_home, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.searchAction -> {
+            startActivity(SearchActivity.getIntent(context!!))
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {

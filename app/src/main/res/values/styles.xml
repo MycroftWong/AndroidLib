@@ -4,11 +4,13 @@
     <style name="CommonToolbarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/colorPrimary</item>
         <item name="titleTextAppearance">@style/ToolbarTitleTextAppearance</item>
+        <item name="colorControlNormal">@android:color/black</item>
     </style>
 
     <!-- 通用Toolbar的标题样式 -->
     <style name="ToolbarTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <!-- 通用的TextView样式 -->

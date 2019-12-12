@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="actionBarSize">@dimen/height_title_bar</item>
-        <item name="toolbarStyle">@style/CommonToolbarStyle</item>
-        <item name="android:textViewStyle">@style/CommonTextViewStyle</item>
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="buttonStyle">@style/CommonButtonStyle</item>
-        <item name="editTextStyle">@style/CommonEditTextStyle</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:listDivider">@drawable/line</item>
-
+    <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.core.text.HtmlCompat
 import com.blankj.utilcode.util.LogUtils
@@ -14,7 +15,6 @@ import com.tencent.smtt.sdk.WebViewClient
 import kotlinx.android.synthetic.main.activity_article_web_view.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
-import wang.mycroft.lib.sample.ui.view.OnTitleBarAdapter
 
 private const val EXTRA_TITLE = "title.extra"
 
@@ -60,19 +60,12 @@ class ArticleWebViewActivity : CommonActivity() {
     }
 
     override fun initViews() {
-        titleBar.title = HtmlCompat.fromHtml(
-            title,
-            HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
+        setSupportActionBar(toolBar)
+        supportActionBar?.title = HtmlCompat.fromHtml(
+            title, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
         )
-        titleBar.setOnTitleBarListener(object : OnTitleBarAdapter() {
-            override fun onLeftClick(v: View?) {
-                finish()
-            }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-            override fun onTitleClick(v: View?) {
-                webView.view?.scrollTo(0, 0)
-            }
-        })
         webView.webViewClient = webViewClient
         webView.webChromeClient = webChromeClient
         webView.loadUrl(url)
@@ -92,6 +85,14 @@ class ArticleWebViewActivity : CommonActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (android.R.id.home == item?.itemId) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private val webViewClient = object : WebViewClient() {

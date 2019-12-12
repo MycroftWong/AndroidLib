@@ -7,10 +7,13 @@
     android:orientation="vertical"
     tools:context=".ui.activity.CategoryDetailActivity">
 
-    <com.hjq.bar.TitleBar
-        android:id="@+id/titleBar"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_title_bar" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
