@@ -79,6 +79,7 @@ dependencies {
 
     testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
+    androidTestImplementation "androidx.test:runner:${versions.runner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
     implementation project(path: ':lib')
 //    implementation 'com.github.MycroftWong:AndroidLib:v1.0.8'
