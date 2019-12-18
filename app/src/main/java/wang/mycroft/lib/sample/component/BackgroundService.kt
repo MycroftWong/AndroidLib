@@ -14,7 +14,7 @@ import wang.mycroft.lib.sample.model.HistoryKey
 /**
  *
  * @blog: https://blog.mycroft.wang
- * @date: 2019年09月15
+ * @date: 2019年09月15日
  * @author: wangqiang
  */
 
@@ -60,14 +60,13 @@ class BackgroundService : IntentService(AppUtils.getAppName() + ".background") {
             historyKeyDao = AppDatabase.getHistoryKeyDao()
 
             GlobalScope.launch(Dispatchers.IO) {
-                val action = intent.action
-                when {
-                    ACTION_ADD == action -> {
+                when (intent.action) {
+                    ACTION_ADD -> {
                         val key = intent.getStringExtra(EXTRA_HISTORY_KEY)
                         addHistory(key)
                     }
-                    ACTION_CLEAR == action -> clearHistory()
-                    ACTION_DELETE == action -> {
+                    ACTION_CLEAR -> clearHistory()
+                    ACTION_DELETE -> {
                         val historyKey = intent.getParcelableExtra<HistoryKey>(EXTRA_HISTORY_KEY)
                         deleteHistoryKey(historyKey)
                     }
@@ -99,9 +98,7 @@ class BackgroundService : IntentService(AppUtils.getAppName() + ".background") {
      * 清空搜索历史关键字
      */
     private suspend fun clearHistory() {
-        historyKeyDao!!.getAllHistoryKey().value?.let {
-            historyKeyDao!!.deleteAll(it)
-        }
+        historyKeyDao!!.deleteAll(historyKeyDao!!.loadAllHistoryKey())
     }
 
     /**

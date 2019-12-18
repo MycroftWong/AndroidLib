@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.SearchHistoryActivity">
+
+    <TextView
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="@id/searchContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchContainer" />
+
+    <View
+        android:id="@+id/searchContainer"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/bg_search_edit"
+        app:layout_constraintEnd_toStartOf="@id/searchButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/searchImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/search"
+        app:layout_constraintBottom_toBottomOf="@id/searchContainer"
+        app:layout_constraintStart_toStartOf="@id/searchContainer"
+        app:layout_constraintTop_toTopOf="@id/searchContainer" />
+
+    <ImageView
+        android:id="@+id/clearImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:padding="8dp"
+        android:src="@drawable/icon_search_delete"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/searchContainer"
+        app:layout_constraintEnd_toEndOf="@id/searchContainer"
+        app:layout_constraintTop_toTopOf="@id/searchContainer"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/searchEdit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@android:color/transparent"
+        android:hint="@string/hint_search"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:textColor="@color/common_text_color_detail"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/searchContainer"
+        app:layout_constraintEnd_toStartOf="@id/clearImage"
+        app:layout_constraintStart_toEndOf="@id/searchImage"
+        app:layout_constraintTop_toTopOf="@id/searchContainer" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/hotKeyContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="hotKeyLabel,labelsView" />
+
+    <TextView
+        android:id="@+id/hotKeyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_symmetric_horizontal"
+        android:layout_marginTop="@dimen/padding_symmetric_vertical"
+        android:text="@string/label_hot_key"
+        android:textSize="@dimen/common_text_size"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchEdit" />
+
+    <com.donkingliang.labels.LabelsView
+        android:id="@+id/labelsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_padding_start_end"
+        android:layout_marginTop="@dimen/padding_symmetric_vertical"
+        android:layout_marginEnd="@dimen/common_padding_start_end"
+        app:labelTextColor="@color/common_text_color_detail"
+        app:labelTextSize="@dimen/common_text_size_label"
+        app:layout_constraintTop_toBottomOf="@id/hotKeyLabel"
+        app:lineMargin="@dimen/padding_symmetric_vertical"
+        app:wordMargin="@dimen/padding_symmetric_horizontal"
+        tools:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/historyKeyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_symmetric_horizontal"
+        android:layout_marginTop="@dimen/padding_symmetric_vertical"
+        android:text="@string/label_history_key"
+        android:textSize="@dimen/common_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/labelsView" />
+
+    <TextView
+        android:id="@+id/clearAllText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/padding_symmetric_horizontal"
+        android:text="@string/text_clear_all"
+        android:textColor="@color/common_text_color_info"
+        android:textSize="@dimen/common_text_size_info"
+        app:layout_constraintBottom_toBottomOf="@id/historyKeyLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/historyKeyLabel" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/padding_symmetric_vertical"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyKeyLabel"
+        tools:listitem="@layout/item_history_key" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

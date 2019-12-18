@@ -16,7 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var loadingDialogHelper: LoadingDialogHelper? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    final override fun onCreate(savedInstanceState: Bundle?) {
         initFields(savedInstanceState)
         super.onCreate(savedInstanceState)
         setContentView(getResId())

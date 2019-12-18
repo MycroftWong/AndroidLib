@@ -19,8 +19,6 @@ import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
 
-private const val STATE_CATEGORY_LIST = "category_list.state"
-
 /**
  *
  * @blog: https://blog.mycroft.wang
@@ -30,6 +28,8 @@ private const val STATE_CATEGORY_LIST = "category_list.state"
 class CategoryFragment : CommonFragment() {
 
     companion object {
+
+        private const val STATE_CATEGORY_LIST = "category_list.state"
 
         fun newInstance(): CategoryFragment {
             return CategoryFragment()

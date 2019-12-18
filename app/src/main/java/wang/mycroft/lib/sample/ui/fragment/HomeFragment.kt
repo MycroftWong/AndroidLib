@@ -27,19 +27,11 @@ import wang.mycroft.lib.sample.model.ListData
 import wang.mycroft.lib.sample.repository.HomeRepository
 import wang.mycroft.lib.sample.repository.model.ResultModel
 import wang.mycroft.lib.sample.ui.activity.ArticleWebViewActivity
-import wang.mycroft.lib.sample.ui.activity.SearchActivity
+import wang.mycroft.lib.sample.ui.activity.SearchHistoryActivity
 import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 import wang.mycroft.lib.util.BaseQuickAdapterUtil
 import wang.mycroft.lib.view.Loading
 import wang.mycroft.lib.view.LoadingHolder
-
-private const val STATE_NEXT_PAGE = "next_page.state"
-
-private const val STATE_ARTICLE_LIST = "article_list.state"
-
-private const val STATE_BANNER_LIST = "banner_list.state"
-
-private const val START_PAGE = 0
 
 /**
  *
@@ -50,6 +42,15 @@ private const val START_PAGE = 0
 class HomeFragment : CommonFragment() {
 
     companion object {
+
+        private const val STATE_NEXT_PAGE = "next_page.state"
+
+        private const val STATE_ARTICLE_LIST = "article_list.state"
+
+        private const val STATE_BANNER_LIST = "banner_list.state"
+
+        private const val START_PAGE = 0
+
         fun newInstance(): HomeFragment {
             return HomeFragment()
         }
@@ -143,7 +144,7 @@ class HomeFragment : CommonFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.searchAction -> {
-            startActivity(SearchActivity.getIntent(context!!))
+            startActivity(SearchHistoryActivity.getIntent(context!!))
             true
         }
         else -> super.onOptionsItemSelected(item)

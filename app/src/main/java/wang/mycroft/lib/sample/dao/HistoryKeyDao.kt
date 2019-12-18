@@ -16,10 +16,18 @@ interface HistoryKeyDao {
     /**
      * 查询所有的搜索历史记录
      *
-     * @return flowable
+     * @return LiveData
      */
     @Query("SELECT * FROM history_key ORDER BY date DESC LIMIT 10")
     fun getAllHistoryKey(): LiveData<List<HistoryKey>>
+
+    /**
+     * 同步查询所有的搜索历史记录
+     *
+     * @return 搜索历史记录列表
+     */
+    @Query("SELECT * FROM history_key")
+    suspend fun loadAllHistoryKey(): List<HistoryKey>
 
     /**
      * 添加历史记录

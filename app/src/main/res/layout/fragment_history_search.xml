@@ -6,6 +6,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/backImage"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:padding="12dp"
+        android:src="@drawable/back"
+        app:layout_constraintBottom_toBottomOf="@id/searchEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchEdit" />
+
+    <TextView
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_symmetric_horizontal"
+        android:paddingEnd="@dimen/padding_symmetric_horizontal"
+        android:text="@string/search"
+        app:layout_constraintBottom_toBottomOf="@id/searchEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchEdit" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/searchEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_search"
+        android:imeOptions="actionSearch"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toStartOf="@id/searchButton"
+        app:layout_constraintStart_toEndOf="@id/backImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:met_clearButton="true" />
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/hotKeyContainer"
         android:layout_width="0dp"
@@ -21,7 +56,7 @@
         android:textSize="@dimen/common_text_size_label"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/backImage" />
 
     <com.donkingliang.labels.LabelsView
         android:id="@+id/labelsView"

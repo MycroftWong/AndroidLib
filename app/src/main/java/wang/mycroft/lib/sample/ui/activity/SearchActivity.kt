@@ -1,34 +1,46 @@
 package wang.mycroft.lib.sample.ui.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
-import com.blankj.utilcode.util.KeyboardUtils
-import com.gyf.immersionbar.ktx.immersionBar
+import androidx.recyclerview.widget.DividerItemDecoration
+import com.blankj.utilcode.util.ToastUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.vertical_refresh_recycler.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
-import wang.mycroft.lib.sample.shared.SearchViewModel
+import wang.mycroft.lib.sample.model.Article
+import wang.mycroft.lib.sample.model.ArticleTypeModel
+import wang.mycroft.lib.sample.model.ListData
+import wang.mycroft.lib.sample.repository.SearchResultRepository
+import wang.mycroft.lib.sample.repository.model.ResultModel
+import wang.mycroft.lib.sample.ui.adapter.recycler.ArticleListAdapter
 
 /**
- * @blog: https://blog.mycroft.wang
- * @date: 2019年09月15日
- * @author: wangqiang
+ * 搜索页面
+ *
+ * @blog https://blog.mycroft.wang/
+ * @author Mycroft Wong
+ * @date 2019年12月17日
  */
 class SearchActivity : CommonActivity() {
 
     companion object {
 
-        fun getIntent(context: Context): Intent {
-            return Intent(context, SearchActivity::class.java)
+        private const val START_PAGE = 0
+
+        private const val EXTRA_KEYWORD = "keyword.extra"
+
+        fun getIntent(context: Context, keyword: String): Intent {
+            return Intent(context, SearchActivity::class.java).apply {
+                putExtra(EXTRA_KEYWORD, keyword)
+            }
         }
     }
 
@@ -36,79 +48,114 @@ class SearchActivity : CommonActivity() {
         return R.layout.activity_search
     }
 
-    override fun initFields(savedInstanceState: Bundle?) {}
+    private lateinit var keyword: String
 
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchResultRepository: SearchResultRepository by viewModels()
 
-    override fun initViews() {
-        immersionBar {
-            fitsSystemWindows(true)
-            statusBarColor(R.color.colorPrimaryDark)
-            statusBarDarkFont(true)
-        }
+    override fun initFields(savedInstanceState: Bundle?) {
+        keyword = intent.getStringExtra(EXTRA_KEYWORD)
 
-        setSupportActionBar(toolBar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        NavigationUI.setupActionBarWithNavController(
-            this, findNavController(R.id.nav_host_fragment)
-        )
-
-        searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-
-        searchViewModel.searchKey.observe(this, Observer<String> { hotKey ->
-            search()
-            searchActionView?.setQuery(hotKey, false)
-        })
+        searchResultRepository.articleList.observe(this, articleListObserver)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return findNavController(R.id.nav_host_fragment).navigateUp()
+    private val searchResultList = ArrayList<ArticleTypeModel>()
+
+    private val adapter: ArticleListAdapter by lazy {
+        ArticleListAdapter(searchResultList)
+    }
+
+    override fun initViews() {
+        backImage.setOnClickListener {
+            setResult(Activity.RESULT_OK)
+            finish()
+            overridePendingTransition(0, 0)
+        }
+        searchText.text = keyword
+
+        searchText.setOnClickListener {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+            overridePendingTransition(0, 0)
+        }
+
+        refreshLayout.setOnRefreshLoadMoreListener(refreshLoadMoreListener)
+
+        adapter.onItemClickListener = onItemClickListener
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        )
     }
 
     override fun loadData() {
+        refreshLayout.autoRefresh(0, 0, 1f, false)
     }
 
-    private var searchActionView: SearchView? = null
+    private var requestingPage = START_PAGE
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        // TODO 设置 SearchView
-        searchActionView = menu?.findItem(R.id.searchAction)?.actionView as? SearchView
-        searchActionView?.setOnQueryTextListener(onQueryTextListener)
-        searchActionView?.queryHint = getString(R.string.hint_search)
+    private var currentPage = START_PAGE
 
-        return true
-    }
-
-    private val onQueryTextListener = object : SearchView.OnQueryTextListener {
-        override fun onQueryTextChange(newText: String?): Boolean {
-            return false
+    private val refreshLoadMoreListener = object : OnRefreshLoadMoreListener {
+        override fun onLoadMore(refreshLayout: RefreshLayout) {
+            loadData(currentPage + 1)
         }
 
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            if (!query.isNullOrEmpty() && TextUtils.getTrimmedLength(query) > 0) {
-                searchViewModel.setSearchKey(query)
+        override fun onRefresh(refreshLayout: RefreshLayout) {
+            loadData(START_PAGE)
+        }
+    }
+
+    private var isLoading = false
+
+    private fun loadData(page: Int) {
+        if (isLoading) {
+            return
+        }
+
+        requestingPage = page
+        isLoading = true
+        searchResultRepository.loadData(keyword, page)
+    }
+
+    private val onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
+        startActivity(
+            ArticleWebViewActivity.getIntent(
+                this,
+                searchResultList[position].article.title,
+                searchResultList[position].article.link
+            )
+        )
+    }
+
+    private val articleListObserver = Observer<ResultModel<ListData<Article>>> { resultModel ->
+        finishRefresh()
+        if (resultModel.errorCode != ResultModel.CODE_SUCCESS) {
+            ToastUtils.showShort(resultModel.errorMsg)
+        } else {
+            val listData = resultModel.data
+            currentPage = requestingPage
+
+            if (requestingPage == START_PAGE) {
+                searchResultList.clear()
             }
-            return true
+
+            listData.datas.forEach {
+                searchResultList.add(ArticleTypeModel(it))
+            }
+
+            adapter.notifyDataSetChanged()
         }
     }
 
-/*
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (android.R.id.home == item?.itemId) {
-            finish()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-*/
+    private fun finishRefresh() {
+        isLoading = false
 
-    private fun search() {
-        KeyboardUtils.hideSoftInput(this)
-        findNavController(R.id.nav_host_fragment).currentDestination?.run {
-            if (this.id != R.id.navigation_search_result) {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_search_result)
+        refreshLayout.run {
+            if (isRefreshing) {
+                finishRefresh()
+            }
+            if (isLoading) {
+                finishLoadMore()
             }
         }
     }
