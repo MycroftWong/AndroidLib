@@ -2,6 +2,8 @@ package wang.mycroft.lib.sample.ui.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import com.tencent.smtt.sdk.WebSettings;
@@ -13,11 +15,24 @@ import com.tencent.smtt.sdk.WebView;
  * @date 2019年10月28日
  */
 public class X5WebView extends WebView {
-    @SuppressLint("SetJavaScriptEnabled")
-    public X5WebView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
+    public X5WebView(Context context) {
+        super(getFixedContext(context));
         initWebViewSettings();
         this.getView().setClickable(true);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    public X5WebView(Context context, AttributeSet attributeSet) {
+        super(getFixedContext(context), attributeSet);
+        initWebViewSettings();
+        this.getView().setClickable(true);
+    }
+
+    private static Context getFixedContext(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return context.createConfigurationContext(new Configuration());
+        }
+        return context;
     }
 
     @SuppressLint("SetJavaScriptEnabled")

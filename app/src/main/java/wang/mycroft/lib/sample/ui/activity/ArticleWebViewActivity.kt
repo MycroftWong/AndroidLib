@@ -16,13 +16,14 @@ import kotlinx.android.synthetic.main.activity_article_web_view.*
 import wang.mycroft.lib.sample.R
 import wang.mycroft.lib.sample.common.CommonActivity
 
-private const val EXTRA_TITLE = "title.extra"
-
-private const val EXTRA_URL = "url.extra"
-
 class ArticleWebViewActivity : CommonActivity() {
 
     companion object {
+
+        private const val EXTRA_TITLE = "title.extra"
+
+        private const val EXTRA_URL = "url.extra"
+
         fun getIntent(context: Context, title: String, url: String): Intent {
             return Intent(context, ArticleWebViewActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)
@@ -61,10 +62,10 @@ class ArticleWebViewActivity : CommonActivity() {
 
     override fun initViews() {
         setSupportActionBar(toolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = HtmlCompat.fromHtml(
             title, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE
         )
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         webView.webViewClient = webViewClient
         webView.webChromeClient = webChromeClient
