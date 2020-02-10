@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_tool">
+        <item>@string/tool</item>
+        <item>导航</item>
+        <item>@string/square</item>
+    </string-array>
+
+    <string-array name="tab_main">
+        <item>@string/main_page</item>
+        <item>@string/tool</item>
+        <item>@string/project</item>
+        <item>@string/official_account</item>
+    </string-array>
+
+</resources>

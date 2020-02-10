@@ -1,0 +1,138 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'AndResGuard'
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+    buildToolsVersion = versions.buildToolsVersion
+
+    defaultConfig {
+        applicationId "wang.mycroft.lib.sample"
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        resConfigs "en", "zh"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //指定room.schemaLocation生成的文件路径
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental"   : "true"]
+            }
+        }
+
+        ndk { abiFilters "armeabi-v7a" }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../release.jks")
+            storePassword "release"
+            keyAlias "release.jks"
+            keyPassword "release"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            jniDebuggable true
+            renderscriptDebuggable true
+            debuggable true
+        }
+        release {
+            shrinkResources true
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            jniDebuggable true
+            signingConfig signingConfigs.release
+            renderscriptDebuggable true
+            debuggable true
+        }
+    }
+    compileOptions {
+        sourceCompatibility versions.jdk
+        targetCompatibility versions.jdk
+    }
+
+    kotlinOptions {
+        jvmTarget = 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin_version}"
+
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
+
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidjunit}"
+    androidTestImplementation "androidx.test:runner:${versions.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.expresso}"
+    implementation project(path: ':lib')
+//    implementation 'com.github.MycroftWong:AndroidLib:v1.0.8'
+
+    implementation "androidx.navigation:navigation-fragment:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui:${versions.navigation}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+
+    implementation "androidx.room:room-runtime:${versions.room}"
+    implementation "androidx.room:room-ktx:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
+
+    implementation 'com.github.donkingliang:LabelsView:1.6.1'
+
+    implementation 'com.hjq:titlebar:6.0'
+
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    implementation 'com.blankj:swipe-panel:1.2'
+
+    implementation "com.scwang.smart:refresh-header-classics:${versions.SmartRefreshLayout}"
+
+    implementation 'com.youth.banner:banner:1.4.10'
+
+    implementation 'com.tencent.tbs.tbssdk:sdk:43697'
+
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+
+    implementation "org.permissionsdispatcher:permissionsdispatcher:${versions.permissionsdispatcher}"
+    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:${versions.permissionsdispatcher}"
+
+    implementation "com.google.dagger:dagger:2.25.4"
+    implementation "com.google.dagger:dagger-android:2.25.4"
+    kapt "com.google.dagger:dagger-compiler:2.25.4"
+
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:${versions.BRAV}"
+}
+
+andResGuard {
+    mappingFile = null
+    use7zip = true
+    useSign = true
+    keepRoot = false
+    compressFilePattern = [
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+            "resources.arsc"
+    ]
+
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.17'
+    }
+}

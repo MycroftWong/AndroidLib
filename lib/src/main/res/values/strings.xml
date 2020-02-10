@@ -1,0 +1,7 @@
+<resources>
+    <string name="text_loading">Loading&#8230;</string>
+    <string name="text_hint_refresh">Did not get the content, please click retry</string>
+    <string name="retry">Retry</string>
+    <string name="text_load_failed">Failed to load</string>
+    <string name="text_load_empty">No Data</string>
+</resources>

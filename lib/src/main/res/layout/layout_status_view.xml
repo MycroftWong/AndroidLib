@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_symmetric_horizontal"
+        android:text="@string/text_loading" />
+
+    <TextView
+        android:id="@+id/retryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_symmetric_horizontal"
+        android:paddingTop="@dimen/padding_symmetric_vertical"
+        android:paddingEnd="@dimen/padding_symmetric_horizontal"
+        android:paddingBottom="@dimen/padding_symmetric_vertical"
+        android:text="@string/retry"
+        android:background="@drawable/bg_retry_button"
+        android:textColor="@color/retry_text_color"
+        android:textSize="15sp" />
+
+</merge>

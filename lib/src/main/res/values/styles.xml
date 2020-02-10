@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LoadingDialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/bg_common_dialog</item>
+        <item name="colorAccent">#FFC502</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorPrimary">@android:color/black</item>
+    </style>
+</resources>
