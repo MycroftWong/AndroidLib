@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:navigation="http://schemas.android.com/navigation"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item_history_key"
     android:background="@drawable/bg_common"
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        tools:text="@string/app_name" />
+        navigation:text="@string/app_name" />
 
     <ImageView
         android:id="@+id/closeImage"

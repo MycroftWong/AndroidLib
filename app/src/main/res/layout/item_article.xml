@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:navigation="http://schemas.android.com/navigation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_common"
@@ -15,7 +15,7 @@
         android:textSize="@dimen/common_text_size_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="mycroft" />
+        navigation:text="mycroft" />
 
     <TextView
         android:id="@+id/dateText"
@@ -25,7 +25,7 @@
         android:textSize="@dimen/common_text_size_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="2019-07-16" />
+        navigation:text="2019-07-16" />
 
     <TextView
         android:id="@+id/contentText"
@@ -37,7 +37,7 @@
         android:textSize="@dimen/text_size_article_content"
         app:layout_constraintStart_toStartOf="@id/nameText"
         app:layout_constraintTop_toBottomOf="@id/nameText"
-        tools:text="每日一问 对于代码中有大量的 if/else 你有什么优化思路？" />
+        navigation:text="每日一问 对于代码中有大量的 if/else 你有什么优化思路？" />
 
     <TextView
         android:id="@+id/chapterText"
@@ -48,6 +48,6 @@
         android:textSize="@dimen/common_text_size_info"
         app:layout_constraintStart_toStartOf="@id/contentText"
         app:layout_constraintTop_toBottomOf="@id/contentText"
-        tools:text="RxJava" />
+        navigation:text="RxJava" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activity.ArticleWebViewActivity">
+    xmlns:navigation="http://schemas.android.com/navigation"
+    navigation:context=".ui.activity.ArticleWebViewActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -29,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:max="100"
-            tools:progress="50"
-            tools:secondaryProgress="75" />
+            navigation:progress="50"
+            navigation:secondaryProgress="75" />
 
     </FrameLayout>
 

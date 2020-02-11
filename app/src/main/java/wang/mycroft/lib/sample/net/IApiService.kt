@@ -62,7 +62,7 @@ interface IApiService {
      * @return
      */
     @GET("navi/json")
-    suspend fun getToolList(): NetModel<List<Tools>>
+    suspend fun getNavigationList(): NetModel<List<Navigation>>
 
     /**
      * 获取项目分类

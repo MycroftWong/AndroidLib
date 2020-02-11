@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:navigation="http://schemas.android.com/navigation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_common"
@@ -21,8 +21,8 @@
         app:layout_constraintEnd_toStartOf="@id/authorText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="置顶"
-        tools:visibility="visible" />
+        navigation:text="置顶"
+        navigation:visibility="visible" />
 
     <TextView
         android:id="@+id/authorText"
@@ -34,7 +34,7 @@
         android:textSize="@dimen/common_text_size_info"
         app:layout_constraintStart_toEndOf="@id/labelText"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="王" />
+        navigation:text="王" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -47,7 +47,7 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/authorText"
-        tools:src="@mipmap/ic_launcher" />
+        navigation:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/titleText"
@@ -62,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageView"
         app:layout_constraintTop_toBottomOf="@id/authorText"
-        tools:text="简洁美观的WAndroid" />
+        navigation:text="简洁美观的WAndroid" />
 
     <TextView
         android:id="@+id/dateText"
@@ -72,7 +72,7 @@
         android:textSize="@dimen/common_text_size_info"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="2018-05-18" />
+        navigation:text="2018-05-18" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
@@ -94,6 +94,6 @@
         app:layout_constraintEnd_toStartOf="@id/dateText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier"
-        tools:text="JNI·JNI编程" />
+        navigation:text="JNI·JNI编程" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

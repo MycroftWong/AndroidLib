@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/navigation_tool"
-        android:icon="@drawable/tools"
+        android:icon="@drawable/navigation"
         android:title="@string/tool"
         app:showAsAction="ifRoom" />
 

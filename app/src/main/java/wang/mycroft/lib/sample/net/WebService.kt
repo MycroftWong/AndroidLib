@@ -96,8 +96,8 @@ object WebService {
         return service.getOfficialAccountList()
     }
 
-    suspend fun getToolList(): NetModel<List<Tools>> {
-        return service.getToolList()
+    suspend fun getNavigationList(): NetModel<List<Navigation>> {
+        return service.getNavigationList()
     }
 
     suspend fun getProjectList(): NetModel<List<Project>> {
